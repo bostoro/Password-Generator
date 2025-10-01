@@ -1,27 +1,7 @@
-# 🍕 PizzaRP – Pizzeria Reference Project (Console)
-
-> 🚧 This is a template repository for student project in the course Programming Foundations at FHNW, BSc BIT.  
-> 🚧 Do not keep this section in your final submission.
-
-This project is intended to:
-
-- Practice the complete process from **problem analysis to implementation**
-- Apply basic **Python** programming concepts learned in the Programming Foundations module
-- Demonstrate the use of **console interaction, data validation, and file processing**
-- Produce clean, well-structured, and documented code
-
-- Use this repository as a starting point by importing it into your own GitHub account.  
-- Work only within your own copy — do not push to the original template.  
-
-
-# 🍕 TEMPLATE for documentation
-> 🚧 Please remove this paragraphs having "🚧". These are comments for preparing the documentations.
-## 📝 Analysis
+# Password Manager - Generate & Check passwords (Console)
 
 **Problem**
-> 🚧 Describe the real-world problem your application solves. (Not HOW, but WHAT)
-
-💡 Example: In a small local pizzeria, the staff writes orders and calculates totals by hand. This causes mistakes and inconsistent orders or discounts.
+Passwords need to be dealed with locally to ensure best security practices.
 
 **Scenario**
 > 🚧 Describe when and how a user will use your application
