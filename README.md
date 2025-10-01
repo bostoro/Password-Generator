@@ -9,7 +9,7 @@ This project is intended to:
 - Apply basic **Python** programming concepts learned in the Programming Foundations module
 - Demonstrate the use of **console interaction, data validation, and file processing**
 - Produce clean, well-structured, and documented code
-- Prepare students for **teamwork and documentation** in later modules
+
 - Use this repository as a starting point by importing it into your own GitHub account.  
 - Work only within your own copy — do not push to the original template.  
 
