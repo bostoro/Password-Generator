@@ -4,21 +4,23 @@
 Passwords need to be dealed with locally to ensure best security practices.
 
 **Scenario**
-> 🚧 Describe when and how a user will use your application
 
-💡 Example: PizzaRP solves the part of the problem where orders and totals are created by letting a user select items from a menu and automatically generating a correct invoice.
+The password generator solves the part of the problem where the user is dependant on third party password generators. The user is in need of localy generated passwords. Complementary to the existing gpassword manager a passworrd generator is needed.
+
 
 **User stories:**
-1. As a user, I want to see the pizza menu in the console.
-2. As a user, I want to select pizzas and see the running total.
-3. As a user, I want discounts to be applied automatically.
-4. As a user, I want an invoice to be created and saved as a file.
+1. As a user, I want to see the lsit of commands.
+2. As a user, I want to select generation options of the password.
+3. As a user, I want see the history of the generated passwords.
+4. As a user, I want to get feedback on the passwords strength.
 
 **Use cases:**
-- Show Menu (from `menu.txt`)
-- Create Order (choose pizzas)
-- Show Current Order and Total
-- Print Invoice (to `invoice_xxx.txt`)
+- Show possible commands
+- Generate password (possible options)
+- Show password's strength
+- Encrypt and decrypt passwords
+- Access User and Password information (from `passwords.db`)
+- Managing passwords
 
 ---
 
@@ -34,13 +36,12 @@ Each app must meet the following three criteria in order to be accepted (see als
 
 ### 1. Interactive App (Console Input)
 
-> 🚧 In this section, document how your project fulfills each criterion.  
 ---
 The application interacts with the user via the console. Users can:
-- View the pizza menu
-- Select pizzas and quantities
-- See the running total
-- Receive an invoice generated as a file
+- View the possible commands
+- Generate passwords
+- Manage users and  passwords
+- Receive a feedback on the stength of the passwords
 
 ---
 
@@ -49,15 +50,15 @@ The application interacts with the user via the console. Users can:
 
 The application validates all user input to ensure data integrity and a smooth user experience. This is implemented in `main-invoice.py` as follows:
 
-- **Menu selection:** When the user enters a pizza number, the program checks if the input is a digit and within the valid menu range:
+- **Generate password (possible options):** When the user wants to create a password, the program checks if the input is a digit and within the valid menu range:
 	```python
 	if not choice.isdigit() or not (1 <= int(choice) <= len(menu)):
 			print("⚠️ Invalid choice.")
 			continue
 	```
-	This ensures only valid menu items can be ordered.
+	This ensures only valid menu items can be generated.
 
-- **Menu file validation:** When reading the menu file, the program checks for valid price values and skips invalid lines:
+- **Pasword storage validation:** When reading the stored passwords file, the program checks for valid entries in the database and skips invalid lines:
 	```python
 	try:
 			menu.append({"name": name, "size": size, "price": float(price)})
@@ -65,7 +66,7 @@ The application validates all user input to ensure data integrity and a smooth u
 			print(f"⚠️ Skipping invalid line: {line.strip()}")
 	```
 
-- **Main menu options:** The main menu checks for valid options and handles invalid choices gracefully:
+- **Password management options:** The management menu checks for valid options and handles invalid choices gracefully:
 	```python
 	else:
 			print("⚠️ Invalid choice.")
