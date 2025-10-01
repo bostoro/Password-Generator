@@ -51,8 +51,8 @@ The application validates all user input to ensure data integrity and a smooth u
 - **Generate password (possible options):** When the user wants to create a password, the program checks if the input is a digit and within the valid menu range:
 	```python
 	if not length.isdigit() or int(length) < MIN_LENGTH:
-			print(f"⚠️ Invalid password length. Password length must be at least {MIN_LENGTH} characters length and fully digit.")
-			continue
+		print(f"⚠️ Invalid password length. Password length must be at least {MIN_LENGTH} characters length and fully digit.")
+		continue
 	```
 	This ensures only valid menu items can be generated.
 
