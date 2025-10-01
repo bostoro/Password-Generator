@@ -12,7 +12,7 @@ This project is intended to:
 - Prepare students for **teamwork and documentation** in later modules
 - Use this repository as a starting point by importing it into your own GitHub account.  
 - Work only within your own copy — do not push to the original template.  
-- Commit regularly to track your progress.
+
 
 # 🍕 TEMPLATE for documentation
 > 🚧 Please remove this paragraphs having "🚧". These are comments for preparing the documentations.
