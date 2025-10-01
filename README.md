@@ -4,9 +4,7 @@
 Passwords need to be dealed with locally to ensure best security practices.
 
 **Scenario**
-
 The password generator solves the part of the problem where the user is dependant on third party password generators. The user is in need of localy generated passwords. Complementary to the existing gpassword manager a passworrd generator is needed.
-
 
 **User stories:**
 1. As a user, I want to see the lsit of commands.
@@ -52,8 +50,8 @@ The application validates all user input to ensure data integrity and a smooth u
 
 - **Generate password (possible options):** When the user wants to create a password, the program checks if the input is a digit and within the valid menu range:
 	```python
-	if not choice.isdigit() or not (1 <= int(choice) <= len(menu)):
-			print("⚠️ Invalid choice.")
+	if not length.isdigit() or int(length) < MIN_LENGTH:
+			print(f"⚠️ Invalid password length. Password length must be at least {MIN_LENGTH} characters length and fully digit.")
 			continue
 	```
 	This ensures only valid menu items can be generated.
@@ -83,30 +81,9 @@ These checks prevent crashes and guide the user to provide correct input, matchi
 
 The application reads and writes data using files:
 
-- **Input file:** `menu.txt` — Contains the pizza menu, one item per line in the format `PizzaName;Size;Price`.
-	- Example:
-		```
-		Margherita;Medium;12.50
-		Salami;Large;15.00
-		Funghi;Small;9.00
-		```
-	- The application reads this file at startup to display available pizzas.
-
-- **Output file:** `invoice_001.txt` (and similar) — Generated when an order is completed. Contains a summary of the order, including items, quantities, prices, discounts, and totals.
-	- Example:
-		```
-		Invoice #001
-		----------------------
-		1x Margherita (Medium)   12.50
-
-
-		2x Salami (Large)        30.00
-		----------------------
-		Total:                  42.50
-		Discount:                2.50
-		Amount Due:             40.00
-		```
-		- The output file serves as a record for both the user and the pizzeria, ensuring accuracy and transparency.
+- **Input/Output file:** `passwords.db` — Contains the entries, one item per line in the format `username, platform, password`.
+	- The application interacts with this file depending on the command specified.
+	- The application writes data to file when needed.
 
 ## ⚙️ Implementation
 
@@ -117,10 +94,11 @@ The application reads and writes data using files:
 
 ### 📂 Repository Structure
 ```text
-PizzaRP/
+Password-Generator/
 ├── main.py             # main program logic (console application)
-├── menu.txt            # pizza menu (input data file)
-├── invoice_001.txt     # example of a generated invoice (output file)
+├── datastore.py        # loic for storing data
+├── help.txt            # help command list
+├── passwords.db        # database with passwords
 ├── docs/               # optional screenshots or project documentation
 └── README.md           # project description and milestones
 ```
@@ -146,11 +124,11 @@ These libraries are part of the Python standard library, so no external installa
 
 > 🚧 Fill in the names of all team members and describe their individual contributions below. Each student should be responsible for at least one part of the project.
 
-| Name       | Contribution                                 |
-|------------|----------------------------------------------|
-| Student A  | Menu reading (file input) and displaying menu|
-| Student B  | Order logic and data validation              |
-| Student C  | Invoice generation (file output) and slides  |
+| Name       | Contribution                                     |
+|------------|--------------------------------------------------|
+| Andrii Vlasov | Menu reading (file input) and displaying menu |
+| Aaron Casula  | Order logic and data validation               |
+| José Gédance  | Invoice generation (file output) and slides   |
 
 
 ## 🤝 Contributing
