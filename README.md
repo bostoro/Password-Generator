@@ -38,7 +38,7 @@ Each app must meet the following three criteria in order to be accepted (see als
 The application interacts with the user via the console. Users can:
 - View the possible commands
 - Generate passwords
-- Manage users and  passwords
+- Manage users and passwords
 - Receive a feedback on the stength of the passwords
 
 ---
@@ -118,8 +118,10 @@ Password-Generator/
 
 ### Libraries Used
 
-- `os`: Used for file and path operations, such as checking if the menu file exists and creating new files.
-- `glob`: Used to find all invoice files matching a pattern (e.g., `invoice_*.txt`) to determine the next invoice number.
+- `os`: Used for file and path operations, such as checking if the menu file exists and creating new files.  
+- `argparse`: Used for parsing command-line arguments and handling user input with custom error messages.  
+- `sqlite3`: Used for database storage and management of password records.  
+- `urllib.parse`: Used for validating and parsing platform URLs.  
 
 These libraries are part of the Python standard library, so no external installation is required. They were chosen for their simplicity and effectiveness in handling file management tasks in a console application.
 
