@@ -46,7 +46,7 @@ The application interacts with the user via the console. Users can:
 
 ### 2. Data Validation
 
-The application validates all user input to ensure data integrity and a smooth user experience. This is implemented in `main-invoice.py` as follows:
+The application validates all user input to ensure data integrity and a smooth user experience. This is implemented in `main.py` as follows:
 
 - **Generate password (possible options):** When the user wants to create a password, the program checks if the input is a digit and within the valid menu range:
 	```python
@@ -56,23 +56,26 @@ The application validates all user input to ensure data integrity and a smooth u
 	```
 	This ensures only valid menu items can be generated.
 
-- **Pasword storage validation:** When reading the stored passwords file, the program checks for valid entries in the database and skips invalid lines:
-	```python
-	try:
-			menu.append({"name": name, "size": size, "price": float(price)})
-	except ValueError:
-			print(f"⚠️ Skipping invalid line: {line.strip()}")
-	```
+- **Verify URL (password management):**  
+  When the user wants to enter a platform link, the program checks if the input is a valid URL (must contain scheme and domain):
+  ```python
+  from urllib.parse import urlparse
 
-- **Password management options:** The management menu checks for valid options and handles invalid choices gracefully:
+  parsed = urlparse(platform)
+  if not all([parsed.scheme, parsed.netloc]):
+      print("⚠️ Invalid URL. Please enter a valid link including scheme (e.g., https://example.com).")
+      continue
+
+- **Password management options:** Ensures only valid command options are accepted. Invalid arguments are handled by extending `argparse.ArgumentParser`, allowing customized error messages and cleaner output. 
 	```python
-	else:
-			print("⚠️ Invalid choice.")
+	class PasswordManagerParser(argparse.ArgumentParser):
+		def error(self, message):
+			print(f"❌ Unknown command or argument: {message}")
+			self.print_help()
+			exit(2)
 	```
 
 These checks prevent crashes and guide the user to provide correct input, matching the validation requirements described in the project guidelines.
-
----
 
 ---
 
@@ -96,7 +99,8 @@ The application reads and writes data using files:
 ```text
 Password-Generator/
 ├── main.py             # main program logic (console application)
-├── datastore.py        # loic for storing data
+├── datastore.py        # SQLite handling
+├── cli_parser.py       # contains PasswordManagerParser
 ├── help.txt            # help command list
 ├── passwords.db        # database with passwords
 ├── docs/               # optional screenshots or project documentation
