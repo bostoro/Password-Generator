@@ -132,7 +132,7 @@ These libraries are part of the Python standard library, so no external installa
 
 | Name          | Contribution                                  |
 |---------------|-----------------------------------------------|
-| Andrii Vlasov | Data storage implementation and hashing       |
+| Andrii Vlasov | Data storage implementation and encryption    |
 | Aaron Casula  | Data presentation and view logic              |
 | José Gédance  | Password generation functionality             |
 
