@@ -1,15 +1,15 @@
 # Password Manager - Generate & Check passwords (Console)
 
 **Problem**
-Users need a safe, local way to create and manage passwords. The tool should list available commands, let users customize password generation, keep records with usernames and platforms, and provide strength feedback — all without relying on external services.
+Memorizing and generating new passwords can be annoying. Users tend to repeat rather than randomize. Also, there is no feedback on whether the password is good or bad. This is why users need a safe, local way to create and manage passwords. The tool should list available commands, let users customize password generation, keep records with usernames and platforms, and provide strength feedback — all without relying on external services.
 
 **Scenario**
-The password generator solves the part of the problem where the user is dependant on third party password generators. The user is in need of localy generated passwords. Complementary to the existing gpassword manager a passworrd generator is needed.
+The password generator solves part of the problem where the user is dependent on third party password generators. The user needs locally generated passwords. Complementary to the existing password manager a password generator is needed.
 
 **User stories:**
 1. As a user, I want to see the lsit of commands to see what the app is capable of.
 2. As a user, I want to select generation options of the password.
-3. As a user, I want view the records of generated passwords along with their associated usernames and platforms.
+3. As a user, I want to view the records of generated passwords along with their associated usernames and platforms.
 4. As a user, I want to get feedback on the passwords strength.
 
 **Use cases:**
@@ -39,7 +39,7 @@ The application interacts with the user via the console. Users can:
 - View the possible commands
 - Generate passwords
 - Manage users and passwords
-- Receive a feedback on the stength of the passwords
+- Receive feedback on the strength of the passwords
 
 ---
 
@@ -108,7 +108,6 @@ Password-Generator/
 ```
 
 ### How to Run
-> 🚧 Adjust if needed.
 1. Open the repository in **GitHub Codespaces**
 2. Open the **Terminal**
 3. Run:
@@ -128,7 +127,6 @@ These libraries are part of the Python standard library, so no external installa
 
 ## 👥 Team & Contributions
 
-> 🚧 Fill in the names of all team members and describe their individual contributions below. Each student should be responsible for at least one part of the project.
 
 | Name          | Contribution                                  |
 |---------------|-----------------------------------------------|
@@ -138,9 +136,6 @@ These libraries are part of the Python standard library, so no external installa
 
 
 ## 🤝 Contributing
-
-> 🚧 This is a template repository for student projects.  
-> 🚧 Do not change this section in your final submission.
 
 - Use this repository as a starting point by importing it into your own GitHub account.  
 - Work only within your own copy — do not push to the original template.  
