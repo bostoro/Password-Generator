@@ -9,7 +9,7 @@ The password generator solves the part of the problem where the user is dependan
 **User stories:**
 1. As a user, I want to see the lsit of commands.
 2. As a user, I want to select generation options of the password.
-3. As a user, I want see the history of the generated passwords.
+3. As a user, I want view the records of generated passwords along with their associated usernames and platforms.
 4. As a user, I want to get feedback on the passwords strength.
 
 **Use cases:**
