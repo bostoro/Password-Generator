@@ -130,11 +130,11 @@ These libraries are part of the Python standard library, so no external installa
 
 > 🚧 Fill in the names of all team members and describe their individual contributions below. Each student should be responsible for at least one part of the project.
 
-| Name       | Contribution                                     |
-|------------|--------------------------------------------------|
-| Andrii Vlasov | Menu reading (file input) and displaying menu |
-| Aaron Casula  | Order logic and data validation               |
-| José Gédance  | Invoice generation (file output) and slides   |
+| Name          | Contribution                                  |
+|---------------|-----------------------------------------------|
+| Andrii Vlasov | Data storage implementation and hashing       |
+| Aaron Casula  | Data presentation and view logic              |
+| José Gédance  | Password generation functionality             |
 
 
 ## 🤝 Contributing
