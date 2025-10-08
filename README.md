@@ -1,13 +1,13 @@
 # Password Manager - Generate & Check passwords (Console)
 
 **Problem**
-Passwords need to be dealed with locally to ensure best security practices.
+Users need a safe, local way to create and manage passwords. The tool should list available commands, let users customize password generation, keep records with usernames and platforms, and provide strength feedback — all without relying on external services.
 
 **Scenario**
 The password generator solves the part of the problem where the user is dependant on third party password generators. The user is in need of localy generated passwords. Complementary to the existing gpassword manager a passworrd generator is needed.
 
 **User stories:**
-1. As a user, I want to see the lsit of commands.
+1. As a user, I want to see the lsit of commands to see what the app is capable of.
 2. As a user, I want to select generation options of the password.
 3. As a user, I want view the records of generated passwords along with their associated usernames and platforms.
 4. As a user, I want to get feedback on the passwords strength.
