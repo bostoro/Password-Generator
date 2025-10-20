@@ -17,7 +17,7 @@ The password generator solves part of the problem where the user is dependent on
 - Generate password (possible options)
 - Show password's strength
 - Encrypt and decrypt passwords
-- Access User and Password information (from `passwords.db`)
+- Access User and Password information (from `vault.db`)
 - Managing passwords
 
 ---
@@ -84,7 +84,7 @@ These checks prevent crashes and guide the user to provide correct input, matchi
 
 The application reads and writes data using files:
 
-- **Input/Output file:** `passwords.db` — Contains the entries, one item per line in the format `username, platform, password`.
+- **Input/Output file:** `vault.db` — Contains the entries, one item per line in the format `username, platform, password`.
 	- The application interacts with this file depending on the command specified.
 	- The application writes data to file when needed.
 
@@ -102,7 +102,7 @@ Password-Generator/
 ├── datastore.py        # SQLite handling
 ├── cli_parser.py       # contains PasswordManagerParser
 ├── help.txt            # help command list
-├── passwords.db        # database with passwords
+├── vault.db        # database with passwords
 ├── docs/               # optional screenshots or project documentation
 └── README.md           # project description and milestones
 ```
@@ -116,7 +116,7 @@ Password-Generator/
 	```
 
 ### Libraries Used
-
+- `cryptography`: pip install cryptography
 - `os`: Used for file and path operations, such as checking if the menu file exists and creating new files.  
 - `argparse`: Used for parsing command-line arguments and handling user input with custom error messages.  
 - `sqlite3`: Used for database storage and management of password records.  
