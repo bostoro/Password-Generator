@@ -3,7 +3,7 @@ import base64
 from dotenv import load_dotenv
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 load_dotenv()
 
@@ -13,7 +13,7 @@ KEY_LENGTH = 32
 ITERATIONS = 480000
 
 def derive_key(master_password: str) -> bytes:
-    kdf = PBKDF2(
+    kdf = PBKDF2HMAC(
         algorithm=ALGORITHM,
         length=KEY_LENGTH,
         salt=SALT,
