@@ -1,5 +1,5 @@
 {
-  "name": "Example-Playground",
+  "name": "Password-Manager",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
