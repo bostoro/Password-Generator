@@ -1,22 +1,46 @@
-#!/usr/bin/env python3
-"""
-SIMPLIFIED VERSION - Password Manager
-Program to manage your passwords securely.
-
-WHAT YOU CAN DO:
-1. Generate random secure passwords
-2. Save passwords in database (encrypted)
-3. View saved passwords (with master password)
-4. Delete passwords
-
-MASTER PASSWORD: 123456
-"""
-
 import random  # For generating random passwords
 import string  # Contains letters, numbers, symbols
 import getpass  # For hiding password input
-from datastore import PasswordDataStore  # Our database
+import datastore_reloaded as vault
+from datastore import PasswordDataStore
 
+def input_boolean(msg: str):
+    valid_yes_responses = ["yes", "y", "true"]
+    valid_no_responses = ["no", "n", "false"]
+    while True:
+        response = input(msg).lower()
+        if response in valid_yes_responses:
+            return True
+        elif response in valid_no_responses:
+            return False
+        else:
+            print("⚠️  Please, provide a valid yes/no answer!")
+
+def input_notnull(msg: str):
+    while True:
+        response = input(msg)
+        if response.strip():
+            return response
+        else:
+            print("⚠️  Error: Answer may not be empty!")
+
+def input_integer(msg: str, ignore_empty=False):
+    while True:
+        response = input(msg)
+        if ignore_empty and not response.strip():
+            return None
+        try:
+            return int(response)
+        except ValueError:
+            print("⚠️  Error: Answer must be an integer!")
+
+def input_password(msg):
+    while True:
+        response = getpass.getpass(msg).strip()
+        if response:
+            return response
+        else:
+            print("⚠️  Error: Password must not be empty!")
 
 # ============================================
 # FUNCTION 1: GENERATE RANDOM PASSWORDS
@@ -54,7 +78,7 @@ def generate_random_password(length=16):
     print("=" * 50)
 
     # STEP 1: Ask user for length
-    answer = input(f"Password length (default {length}): ").strip()
+    answer = input_integer(f"Password length (default {length}): ", True)
 
     # If user entered something, use that length
     if answer:
@@ -62,10 +86,10 @@ def generate_random_password(length=16):
 
     # STEP 2: Ask user which character types to include
     print("\nCharacter types to include:")
-    use_uppercase = input("Include UPPERCASE letters (A-Z)? (Y/n): ").strip().lower() != 'n'
-    use_lowercase = input("Include lowercase letters (a-z)? (Y/n): ").strip().lower() != 'n'
-    use_numbers = input("Include numbers (0-9)? (Y/n): ").strip().lower() != 'n'
-    use_symbols = input("Include symbols (!@#$%...)? (Y/n): ").strip().lower() != 'n'
+    use_uppercase = input_boolean("Include UPPERCASE letters (A-Z)? (Y/n): ")
+    use_lowercase = input_boolean("Include lowercase letters (a-z)? (Y/n): ")
+    use_numbers = input_boolean("Include numbers (0-9)? (Y/n): ")
+    use_symbols = input_boolean("Include symbols (!@#$%...)? (Y/n): ")
 
     # STEP 3: Prepare character sets based on user choices
     all_characters = ''
@@ -99,21 +123,17 @@ def generate_random_password(length=16):
     print(f"   Length: {len(password)} characters")
 
     # STEP 6: Ask if they want to save it
-    save = input("\nDo you want to save this password? (y/N): ").strip().lower()
+    save = input_boolean("\nDo you want to save this password? (y/N): ")
 
-    if save == 'y':
+    if save:
         # Ask for information
-        username = input("Username or email: ").strip()
-        platform = input("Website (eg: https://facebook.com): ").strip()
+        username = input_notnull("Username or email: ").strip()
+        platform = input_notnull("Website (eg: https://facebook.com): ").strip()
 
-        # Check they're not empty
-        if username and platform:
-            # Save in database
-            store = PasswordDataStore()
-            saved_id = store.save_password(username, platform, password)
-            print(f"✅ Password saved with ID: {saved_id}")
-        else:
-            print("⚠️  You must enter username and website!")
+        # Save in database
+        store = PasswordDataStore()
+        saved_id = store.save_password(username, platform, password)
+        print(f"✅ Password saved with ID: {saved_id}")
 
 
 # ============================================
@@ -242,14 +262,24 @@ def delete_password():
     else:
         print(f"⚠️  No password found with ID {id_to_delete}")
 
+def update_master_password():
+    updating_password = True
+    while updating_password:
+        old_password = input_password("Type in the old master password: ")
+        if not vault.check_master_password(old_password):
+            print("❌ Wrong master password!")
+            updating_password = input_boolean("Would you like to retry? (Y/n): ")
+            continue
+        
+        new_password = input_password("Type in the new master password: ")
+        if vault.update_master_password(old_password, new_password):
+            print("✅ Successfully updated master password!")
+            updating_password = False
+        else:
+            print("❌ Failed to update master password!")
+            updating_password = input_boolean("Would you like to retry? (Y/n): ")
 
-# ============================================
-# FUNCTION 5: SHOW MENU
-# ============================================
 def show_menu():
-    """
-    Shows the application's main menu.
-    """
     print("\n╔══════════════════════════════════════════════════════════╗")
     print("║         PASSWORD MANAGER - Simplified Version           ║")
     print("╚══════════════════════════════════════════════════════════╝")
@@ -258,34 +288,28 @@ def show_menu():
     print("  2. Save password manually")
     print("  3. View all saved passwords")
     print("  4. Delete a password")
-    print("  5. Exit")
+    print("  5. Update master password")
+    print("  6. Exit")
     print("\n💡 Master password to view passwords: 123456")
 
+def check_master_password():
+    while not vault.master_password_exists():
+        print("⚠️  Before running the application, please set up the master password")
+        response = getpass.getpass("\n🔒 Type in new master password: ").strip()
+        if response:
+            vault.set_master_password(response)
+            print("✅ Master password successfully set!")
 
-# ============================================
-# MAIN PROGRAM
-# ============================================
 def main():
-    """
-    Main function that starts the program.
+    vault.init_database()
+    check_master_password()
 
-    WHAT IT DOES:
-    1. Shows menu
-    2. Asks what you want to do
-    3. Executes chosen function
-    4. Repeats until you exit
-    """
-
-    # Infinite loop (continues until you choose to exit)
     while True:
-        # STEP 1: Show menu
         show_menu()
 
-        # STEP 2: Ask what to do
         print("-" * 60)
-        choice = input("Choose an option (1-5): ").strip()
+        choice = input("Choose an option (1-6): ").strip()
 
-        # STEP 3: Execute the right function based on choice
         if choice == '1':
             generate_random_password()
 
@@ -299,19 +323,17 @@ def main():
             delete_password()
 
         elif choice == '5':
+            update_master_password()
+
+        elif choice == '6':
             print("\n👋 Goodbye!")
-            break  # Exit loop
+            break
 
         else:
-            print("⚠️  Invalid option! Choose a number from 1 to 5.")
+            print("⚠️  Invalid option! Choose a number from 1 to 6.")
 
-
-# ============================================
-# PROGRAM STARTING POINT
-# ============================================
 if __name__ == '__main__':
-    """
-    This is the starting point.
-    When you run 'python3 main.py', it starts here.
-    """
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n👋 Goodbye!")
