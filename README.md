@@ -7,7 +7,7 @@ Memorizing and generating new passwords can be annoying. Users tend to repeat ra
 The password generator solves part of the problem where the user is dependent on third party password generators. The user needs locally generated passwords. Complementary to the existing password manager a password generator is needed.
 
 **User stories:**
-1. As a user, I want to see the lsit of commands to see what the app is capable of.
+1. As a user, I want to see the list of commands to see what the app is capable of.
 2. As a user, I want to select generation options of the password.
 3. As a user, I want to view the records of generated passwords along with their associated usernames and platforms.
 4. As a user, I want to get feedback on the passwords strength.
@@ -100,9 +100,7 @@ The application reads and writes data using files:
 Password-Generator/
 ├── main.py             # main program logic (console application)
 ├── datastore.py        # SQLite handling
-├── cli_parser.py       # contains PasswordManagerParser
-├── help.txt            # help command list
-├── passwords.db        # database with passwords
+├── vault.db            # database with passwords (the name of the file is an environment variable)
 ├── docs/               # optional screenshots or project documentation
 └── README.md           # project description and milestones
 ```
@@ -129,9 +127,8 @@ python3 -m pip install -r requirements.txt
 ### Libraries Used
 
 - `os`: Used for file and path operations, such as checking if the menu file exists and creating new files.  
-- `argparse`: Used for parsing command-line arguments and handling user input with custom error messages.  
-- `sqlite3`: Used for database storage and management of password records.  
-- `urllib.parse`: Used for validating and parsing platform URLs.  
+- `dotenv`: Used to load local .env file.
+- `cryptography`: Used to encrypt/decrypt passwords.
 
 These libraries are part of the Python standard library, so no external installation is required. They were chosen for their simplicity and effectiveness in handling file management tasks in a console application.
 

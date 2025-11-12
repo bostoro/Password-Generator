@@ -2,45 +2,9 @@ import random  # For generating random passwords
 import string  # Contains letters, numbers, symbols
 import getpass  # For hiding password input
 import datastore_reloaded as vault
+
 from datastore import PasswordDataStore
-
-def input_boolean(msg: str):
-    valid_yes_responses = ["yes", "y", "true"]
-    valid_no_responses = ["no", "n", "false"]
-    while True:
-        response = input(msg).lower()
-        if response in valid_yes_responses:
-            return True
-        elif response in valid_no_responses:
-            return False
-        else:
-            print("⚠️  Please, provide a valid yes/no answer!")
-
-def input_notnull(msg: str):
-    while True:
-        response = input(msg)
-        if response.strip():
-            return response
-        else:
-            print("⚠️  Error: Answer may not be empty!")
-
-def input_integer(msg: str, ignore_empty=False):
-    while True:
-        response = input(msg)
-        if ignore_empty and not response.strip():
-            return None
-        try:
-            return int(response)
-        except ValueError:
-            print("⚠️  Error: Answer must be an integer!")
-
-def input_password(msg):
-    while True:
-        response = getpass.getpass(msg).strip()
-        if response:
-            return response
-        else:
-            print("⚠️  Error: Password must not be empty!")
+from input_utils import input_boolean, input_integer, input_password, input_string_notnull
 
 # ============================================
 # FUNCTION 1: GENERATE RANDOM PASSWORDS
@@ -127,8 +91,8 @@ def generate_random_password(length=16):
 
     if save:
         # Ask for information
-        username = input_notnull("Username or email: ").strip()
-        platform = input_notnull("Website (eg: https://facebook.com): ").strip()
+        username = input_string_notnull("Username or email: ").strip()
+        platform = input_string_notnull("Website (eg: https://facebook.com): ").strip()
 
         # Save in database
         store = PasswordDataStore()
@@ -281,7 +245,7 @@ def update_master_password():
 
 def show_menu():
     print("\n╔══════════════════════════════════════════════════════════╗")
-    print("║         PASSWORD MANAGER - Simplified Version           ║")
+    print("║         PASSWORD MANAGER - Simplified Version            ║")
     print("╚══════════════════════════════════════════════════════════╝")
     print("\nWhat do you want to do?")
     print("  1. Generate random password")
@@ -302,6 +266,7 @@ def check_master_password():
 
 def main():
     vault.init_database()
+    
     check_master_password()
 
     while True:
