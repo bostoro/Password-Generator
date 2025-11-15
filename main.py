@@ -2,8 +2,8 @@ import random  # For generating random passwords
 import string  # Contains letters, numbers, symbols
 import getpass  # For hiding password input
 import datastore_reloaded as vault
-
 import password_utils
+
 from datastore import PasswordDataStore
 from input_utils import input_boolean, input_integer, input_password, input_string_notnull
 
@@ -211,11 +211,7 @@ def delete_password():
     print("=" * 50)
 
     # STEP 1: Ask for ID
-    try:
-        id_to_delete = int(input("Enter password ID to delete: ").strip())
-    except ValueError:
-        print("⚠️  You must enter a number!")
-        return
+    id_to_delete = input_integer("Enter password ID to delete: ")
 
     # STEP 2: Delete from database
     store = PasswordDataStore()
@@ -244,6 +240,18 @@ def update_master_password():
             print("❌ Failed to update master password!")
             updating_password = input_boolean("Would you like to retry? (Y/n): ")
 
+def check_password_stength():
+    password = input_string_notnull("Type the password to check: ")
+    strength = password_utils.get_password_strength(password)
+
+    if strength == "weak":
+        print("❌ Your password is weak.")
+    elif strength == "strong":
+        print("🔐 Your password is strong.")
+    else:
+        print("✅ Your password is fine (not weak, but not strong enough).")
+
+
 def show_menu():
     print("\n╔══════════════════════════════════════════════════════════╗")
     print("║         PASSWORD MANAGER - Simplified Version            ║")
@@ -254,7 +262,8 @@ def show_menu():
     print("  3. View all saved passwords")
     print("  4. Delete a password")
     print("  5. Update master password")
-    print("  6. Exit")
+    print("  6. Check password stength")
+    print("  7. Exit")
     print("\n💡 Master password to view passwords: 123456")
 
 def check_master_password():
@@ -292,6 +301,9 @@ def main():
             update_master_password()
 
         elif choice == '6':
+            check_password_stength()
+
+        elif choice == '7':
             print("\n👋 Goodbye!")
             break
 
@@ -299,7 +311,6 @@ def main():
             print("⚠️  Invalid option! Choose a number from 1 to 6.")
 
 if __name__ == '__main__':
-    print(password_utils.get_password_strength("1,2,3"))
     try:
         main()
     except KeyboardInterrupt:

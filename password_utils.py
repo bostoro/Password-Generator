@@ -43,7 +43,7 @@ def get_password_strength(password: str):
     has_special_characters = re.search(f"[{re.escape(string.punctuation)}]", password)
     length = len(password)
     if length < 6 or not has_lower or not has_upper_cases or not has_digits:
-        return "Weak"
+        return "weak"
     if length >= 12 and has_lower and has_upper_cases and has_digits and has_special_characters:
-        return "Strong"
-    return "Medium"
+        return "strong"
+    return "medium"
