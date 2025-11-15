@@ -1,6 +1,6 @@
 import os
 import sqlite3
-import password_encryption as pe
+import password_utils as pe
 from dotenv import load_dotenv
 
 load_dotenv()

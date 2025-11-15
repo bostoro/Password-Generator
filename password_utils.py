@@ -1,5 +1,7 @@
 import os
 import base64
+import re
+import string
 from dotenv import load_dotenv
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
@@ -33,3 +35,15 @@ def decrypt_password(encrypted_password: str, master_password: str) -> str:
     fernet = Fernet(key)
     decrypted = fernet.decrypt(encrypted_password.encode())
     return decrypted.decode()
+
+def get_password_strength(password: str):
+    has_lower = re.search(r"[a-z]", password)
+    has_upper_cases = re.search(r"[A-Z]", password)
+    has_digits = re.search(r"\d", password)
+    has_special_characters = re.search(f"[{re.escape(string.punctuation)}]", password)
+    length = len(password)
+    if length < 6 or not has_lower or not has_upper_cases or not has_digits:
+        return "Weak"
+    if length >= 12 and has_lower and has_upper_cases and has_digits and has_special_characters:
+        return "Strong"
+    return "Medium"

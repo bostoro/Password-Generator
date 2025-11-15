@@ -3,6 +3,7 @@ import string  # Contains letters, numbers, symbols
 import getpass  # For hiding password input
 import datastore_reloaded as vault
 
+import password_utils
 from datastore import PasswordDataStore
 from input_utils import input_boolean, input_integer, input_password, input_string_notnull
 
@@ -298,6 +299,7 @@ def main():
             print("⚠️  Invalid option! Choose a number from 1 to 6.")
 
 if __name__ == '__main__':
+    print(password_utils.get_password_strength("1,2,3"))
     try:
         main()
     except KeyboardInterrupt:
