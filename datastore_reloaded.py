@@ -59,8 +59,7 @@ def check_master_password(master_password: str) -> bool:
     if not result:
         return False
     try:
-        stored_encrypted = result[0]
-        decrypted = pe.decrypt_password(stored_encrypted, master_password)
+        decrypted = pe.decrypt_password(result[0], master_password)
         return decrypted == master_password
     except Exception:
         return False
@@ -91,3 +90,60 @@ def update_master_password(old_master_password: str, new_master_password: str) -
     connection.commit()
     connection.close()
     return True
+
+def save_password(username, platform, password, master_password):
+    encrypted_password = pe.encrypt_password(password, master_password)
+
+    connection = sqlite3.connect(DB_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute('''
+        INSERT INTO passwords (username, platform, password)
+        VALUES (?, ?, ?)
+    ''', (username, platform, encrypted_password))
+
+    password_id = cursor.lastrowid
+
+    connection.commit()
+    connection.close()
+
+    return password_id
+
+def show_all_passwords(master_password, show_real_passwords=False):
+    connection = sqlite3.connect(DB_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT id, username, platform, password, created_at FROM passwords')
+    rows = cursor.fetchall()
+    connection.close()
+
+    results = []
+
+    for row in rows:
+        pwd_id = row[0]
+        username = row[1]
+        platform = row[2]
+        encrypted_password = row[3]
+        date = row[4]
+
+        if show_real_passwords:
+            password =  pe.decrypt_password(encrypted_password, master_password)
+        else:
+            password = '********'
+
+        results.append((pwd_id, username, platform, password, date))
+
+    return results
+
+def delete_password(password_id):
+    connection = sqlite3.connect(DB_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute('DELETE FROM passwords WHERE id = ?', (password_id,))
+
+    deleted = cursor.rowcount > 0
+
+    connection.commit()
+    connection.close()
+
+    return deleted

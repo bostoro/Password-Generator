@@ -1,10 +1,7 @@
 import random  # For generating random passwords
 import string  # Contains letters, numbers, symbols
-import getpass  # For hiding password input
 import datastore_reloaded as vault
 import password_utils
-
-from datastore import PasswordDataStore
 from input_utils import input_boolean, input_integer, input_password, input_string_notnull
 
 # ============================================
@@ -88,16 +85,25 @@ def generate_random_password(length=16):
     print(f"   Length: {len(password)} characters")
 
     # STEP 6: Ask if they want to save it
-    save = input_boolean("\nDo you want to save this password? (y/N): ")
+    save = input_boolean("\nDo you want to save this password? (Y/n): ")
 
     if save:
+        master_password = None
+        while not master_password:
+            response = input_password("\n🔒 Enter master password: ")
+            if response.strip().lower() == ("q" or "quit"):
+                return
+            elif vault.check_master_password(response):
+                master_password = response
+            else:
+                print("❌ Wrong master password! Type Q to quit.")
+
         # Ask for information
         username = input_string_notnull("Username or email: ").strip()
         platform = input_string_notnull("Website (eg: https://facebook.com): ").strip()
 
         # Save in database
-        store = PasswordDataStore()
-        saved_id = store.save_password(username, platform, password)
+        saved_id = vault.save_password(username, platform, password, master_password)
         print(f"✅ Password saved with ID: {saved_id}")
 
 
@@ -116,14 +122,11 @@ def show_saved_passwords():
     print("\n📋 SAVED PASSWORDS")
     print("=" * 50)
 
-    # Create object to access database
-    store = PasswordDataStore()
-
     # STEP 1: Ask for master password (hidden for security)
-    master_pwd = getpass.getpass("\n🔒 Enter master password: ").strip()
+    master_pwd = input_password("\n🔒 Enter master password: ")
 
     # STEP 2: Check if it's correct
-    if store.verify_master_password(master_pwd):
+    if vault.check_master_password(master_pwd):
         print("✅ Master password correct!\n")
         show_real = True  # Show real passwords
     else:
@@ -131,7 +134,7 @@ def show_saved_passwords():
         show_real = False  # Show asterisks
 
     # STEP 3: Get all passwords from database
-    passwords = store.show_all_passwords(show_real_passwords=show_real)
+    passwords = vault.show_all_passwords(master_pwd, show_real)
 
     # STEP 4: Check if there are passwords
     if not passwords:
@@ -179,6 +182,16 @@ def save_password_manually():
     print("\n💾 SAVE A NEW PASSWORD")
     print("=" * 50)
 
+    master_password = None
+    while not master_password:
+        response = input_password("\n🔒 Enter master password: ")
+        if response.strip().lower() == ("q" or "quit"):
+            return
+        elif vault.check_master_password(response):
+            master_password = response
+        else:
+            print("❌ Wrong master password! Type Q to quit.")
+
     # STEP 1: Ask for information
     username = input("Username or email: ").strip()
     platform = input("Website (eg: https://facebook.com): ").strip()
@@ -190,8 +203,7 @@ def save_password_manually():
         return
 
     # STEP 3: Save in database
-    store = PasswordDataStore()
-    saved_id = store.save_password(username, platform, password)
+    saved_id = vault.save_password(username, platform, password, master_password)
 
     print(f"✅ Password saved with ID: {saved_id}")
 
@@ -214,8 +226,7 @@ def delete_password():
     id_to_delete = input_integer("Enter password ID to delete: ")
 
     # STEP 2: Delete from database
-    store = PasswordDataStore()
-    deleted = store.delete_password(id_to_delete)
+    deleted = vault.delete_password(id_to_delete)
 
     # STEP 3: Show result
     if deleted:
@@ -264,15 +275,13 @@ def show_menu():
     print("  5. Update master password")
     print("  6. Check password stength")
     print("  7. Exit")
-    print("\n💡 Master password to view passwords: 123456")
 
 def check_master_password():
     while not vault.master_password_exists():
         print("⚠️  Before running the application, please set up the master password")
-        response = getpass.getpass("\n🔒 Type in new master password: ").strip()
-        if response:
-            vault.set_master_password(response)
-            print("✅ Master password successfully set!")
+        response = input_password("\n🔒 Type in new master password: ")
+        vault.set_master_password(response)
+        print("✅ Master password successfully set!")
 
 def main():
     vault.init_database()
