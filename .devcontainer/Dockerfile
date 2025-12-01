@@ -1,7 +1,7 @@
 # Uses Microsoft's Python devcontainer base (has user "vscode" and Python preinstalled)
 FROM mcr.microsoft.com/devcontainers/python:3.11
 
-COPY requirements.txt /tmp/requirements.txt
+COPY ../requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 # Optional: set up a venv and install tools
