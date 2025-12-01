@@ -1,6 +1,6 @@
 import random  # For generating random passwords
 import string  # Contains letters, numbers, symbols
-import datastore_reloaded as vault
+import datastore_reloaded as datastore
 import password_utils
 from input_utils import input_boolean, input_integer, input_password, input_string_notnull
 
@@ -93,7 +93,7 @@ def generate_random_password(length=16):
             response = input_password("\n🔒 Enter master password: ")
             if response.strip().lower() == ("q" or "quit"):
                 return
-            elif vault.check_master_password(response):
+            elif datastore.check_master_password(response):
                 master_password = response
             else:
                 print("❌ Wrong master password! Type Q to quit.")
@@ -103,7 +103,7 @@ def generate_random_password(length=16):
         platform = input_string_notnull("Website (eg: https://facebook.com): ").strip()
 
         # Save in database
-        saved_id = vault.save_password(username, platform, password, master_password)
+        saved_id = datastore.save_password(username, platform, password, master_password)
         print(f"✅ Password saved with ID: {saved_id}")
 
 
@@ -126,7 +126,7 @@ def show_saved_passwords():
     master_pwd = input_password("\n🔒 Enter master password: ")
 
     # STEP 2: Check if it's correct
-    if vault.check_master_password(master_pwd):
+    if datastore.check_master_password(master_pwd):
         print("✅ Master password correct!\n")
         show_real = True  # Show real passwords
     else:
@@ -134,7 +134,7 @@ def show_saved_passwords():
         show_real = False  # Show asterisks
 
     # STEP 3: Get all passwords from database
-    passwords = vault.show_all_passwords(master_pwd, show_real)
+    passwords = datastore.show_all_passwords(master_pwd, show_real)
 
     # STEP 4: Check if there are passwords
     if not passwords:
@@ -187,7 +187,7 @@ def save_password_manually():
         response = input_password("\n🔒 Enter master password: ")
         if response.strip().lower() == ("q" or "quit"):
             return
-        elif vault.check_master_password(response):
+        elif datastore.check_master_password(response):
             master_password = response
         else:
             print("❌ Wrong master password! Type Q to quit.")
@@ -203,7 +203,7 @@ def save_password_manually():
         return
 
     # STEP 3: Save in database
-    saved_id = vault.save_password(username, platform, password, master_password)
+    saved_id = datastore.save_password(username, platform, password, master_password)
 
     print(f"✅ Password saved with ID: {saved_id}")
 
@@ -226,7 +226,7 @@ def delete_password():
     id_to_delete = input_integer("Enter password ID to delete: ")
 
     # STEP 2: Delete from database
-    deleted = vault.delete_password(id_to_delete)
+    deleted = datastore.delete_password(id_to_delete)
 
     # STEP 3: Show result
     if deleted:
@@ -238,13 +238,13 @@ def update_master_password():
     updating_password = True
     while updating_password:
         old_password = input_password("Type in the old master password: ")
-        if not vault.check_master_password(old_password):
+        if not datastore.check_master_password(old_password):
             print("❌ Wrong master password!")
             updating_password = input_boolean("Would you like to retry? (Y/n): ")
             continue
         
         new_password = input_password("Type in the new master password: ")
-        if vault.update_master_password(old_password, new_password):
+        if datastore.update_master_password(old_password, new_password):
             print("✅ Successfully updated master password!")
             updating_password = False
         else:
@@ -277,14 +277,14 @@ def show_menu():
     print("  7. Exit")
 
 def check_master_password():
-    while not vault.master_password_exists():
+    while not datastore.master_password_exists():
         print("⚠️  Before running the application, please set up the master password")
         response = input_password("\n🔒 Type in new master password: ")
-        vault.set_master_password(response)
+        datastore.set_master_password(response)
         print("✅ Master password successfully set!")
 
 def main():
-    vault.init_database()
+    datastore.init_database()
     
     check_master_password()
 
