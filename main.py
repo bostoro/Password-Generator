@@ -283,7 +283,7 @@ def main():
         show_menu()
 
         print("-" * 60)
-        choice = input("Choose an option (1-6): ").strip()
+        choice = input("Choose an option (1-7): ").strip()
 
         if choice == '1':
             generate_random_password()
@@ -308,7 +308,7 @@ def main():
             break
 
         else:
-            print("⚠️  Invalid option! Choose a number from 1 to 6.")
+            print("⚠️  Invalid option! Choose a number from 1 to 7.")
 
 if __name__ == '__main__':
     try:

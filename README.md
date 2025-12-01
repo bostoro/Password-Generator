@@ -56,25 +56,6 @@ The application validates all user input to ensure data integrity and a smooth u
 	```
 	This ensures only valid menu items can be generated.
 
-- **Verify URL (password management):**  
-  When the user wants to enter a platform link, the program checks if the input is a valid URL (must contain scheme and domain):
-  ```python
-  from urllib.parse import urlparse
-
-  parsed = urlparse(platform)
-  if not all([parsed.scheme, parsed.netloc]):
-      print("⚠️ Invalid URL. Please enter a valid link including scheme (e.g., https://example.com).")
-      continue
-
-- **Password management options:** Ensures only valid command options are accepted. Invalid arguments are handled by extending `argparse.ArgumentParser`, allowing customized error messages and cleaner output. 
-	```python
-	class PasswordManagerParser(argparse.ArgumentParser):
-		def error(self, message):
-			print(f"❌ Unknown command or argument: {message}")
-			self.print_help()
-			exit(2)
-	```
-
 These checks prevent crashes and guide the user to provide correct input, matching the validation requirements described in the project guidelines.
 
 ---
@@ -84,7 +65,7 @@ These checks prevent crashes and guide the user to provide correct input, matchi
 
 The application reads and writes data using files:
 
-- **Input/Output file:** `passwords.db` — Contains the entries, one item per line in the format `username, platform, password`.
+- **Input/Output file:** `vault.db` — Contains the entries, one item per line in the format `username, platform, password`.
 	- The application interacts with this file depending on the command specified.
 	- The application writes data to file when needed.
 
@@ -93,12 +74,15 @@ The application reads and writes data using files:
 ### Technology
 - Python 3.x
 - Environment: GitHub Codespaces
-- No external libraries
+- Some PIP libraries
 
 ### 📂 Repository Structure
 ```text
 Password-Generator/
 ├── main.py             # main program logic (console application)
+├── datastore.py        # SQLite handling
+├── password_utils.py   # Password encryption
+├── input_utils.py      # Utils for inputs (integers, booleans, passwords, etc.)
 ├── datastore.py        # SQLite handling
 ├── vault.db            # database with passwords (the name of the file is an environment variable)
 ├── docs/               # optional screenshots or project documentation
@@ -108,11 +92,11 @@ Password-Generator/
 ### Installation (first time run)
 python3 -m pip install -r requirements.txt
 1. Install pip (if not installed):
-    ```
+    ```bash
     python3 -m ensurepip --upgrade
     ```
 2. Install dependencies:
-    ```
+    ```bash
     python3 -m pip install requirements.txt
     ```
 
@@ -129,8 +113,6 @@ python3 -m pip install -r requirements.txt
 - `os`: Used for file and path operations, such as checking if the menu file exists and creating new files.  
 - `dotenv`: Used to load local .env file.
 - `cryptography`: Used to encrypt/decrypt passwords.
-
-These libraries are part of the Python standard library, so no external installation is required. They were chosen for their simplicity and effectiveness in handling file management tasks in a console application.
 
 
 ## 👥 Team & Contributions
