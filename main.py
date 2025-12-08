@@ -1,6 +1,6 @@
 import random  # For generating random passwords
 import string  # Contains letters, numbers, symbols
-import datastore_reloaded as datastore
+import datastore
 import password_utils
 from input_utils import input_boolean, input_integer, input_password, input_string_notnull
 
@@ -134,7 +134,7 @@ def show_saved_passwords():
         show_real = False  # Show asterisks
 
     # STEP 3: Get all passwords from database
-    passwords = datastore.show_all_passwords(master_pwd, show_real)
+    passwords = datastore.get_all_passwords(master_pwd, show_real)
 
     # STEP 4: Check if there are passwords
     if not passwords:
@@ -278,7 +278,7 @@ def show_menu():
 
 def check_master_password():
     while not datastore.master_password_exists():
-        print("⚠️  Before running the application, please set up the master password")
+        print("⚠️  Before running the application, please set up the master password.")
         response = input_password("\n🔒 Type in new master password: ")
         datastore.set_master_password(response)
         print("✅ Master password successfully set!")
