@@ -1,5 +1,6 @@
 import getpass
 
+
 def input_boolean(msg: str):
     valid_yes_responses = ["yes", "y", "true"]
     valid_no_responses = ["no", "n", "false"]
@@ -12,6 +13,7 @@ def input_boolean(msg: str):
         else:
             print("⚠️  Please, provide a valid yes/no answer!")
 
+
 def input_string_notnull(msg: str):
     while True:
         response = input(msg)
@@ -19,6 +21,7 @@ def input_string_notnull(msg: str):
             return response
         else:
             print("⚠️  Error: Answer may not be empty!")
+
 
 def input_integer(msg: str, ignore_empty=False):
     while True:
@@ -29,6 +32,7 @@ def input_integer(msg: str, ignore_empty=False):
             return int(response)
         except ValueError:
             print("⚠️  Error: Answer must be an integer!")
+
 
 def input_password(msg):
     while True:

@@ -2,7 +2,9 @@ import random  # For generating random passwords
 import string  # Contains letters, numbers, symbols
 import datastore
 import password_utils
-from input_utils import input_boolean, input_integer, input_password, input_string_notnull
+from input_utils import input_boolean, input_integer
+from input_utils import input_password, input_string_notnull
+
 
 # ============================================
 # FUNCTION 1: GENERATE RANDOM PASSWORDS
@@ -13,7 +15,8 @@ def generate_random_password(length=16):
 
     HOW IT WORKS:
     1. Asks user for password length
-    2. Asks which character types to include (uppercase, lowercase, numbers, symbols)
+    2. Asks which character types to include
+    (uppercase, lowercase, numbers, symbols)
     3. Prepares a list of all chosen characters
     4. Chooses characters randomly from the list
     5. Puts them together to create the password
@@ -70,8 +73,13 @@ def generate_random_password(length=16):
 
     # Check if at least one character type was selected
     if not all_characters:
-        print("⚠️  Warning: No character types selected. Using all character types.")
-        all_characters = string.ascii_uppercase + string.ascii_lowercase + string.digits + string.punctuation
+        print("⚠️  Warning: No character types selected. Using all types.")
+        all_characters = (
+            string.ascii_uppercase +
+            string.ascii_lowercase +
+            string.digits +
+            string.punctuation
+        )
 
     # STEP 4: Generate password by choosing random characters
     password = ''  # Empty string
@@ -100,10 +108,17 @@ def generate_random_password(length=16):
 
         # Ask for information
         username = input_string_notnull("Username or email: ").strip()
-        platform = input_string_notnull("Website (eg: https://facebook.com): ").strip()
+        platform = input_string_notnull(
+            "Website (eg: https://facebook.com): "
+        ).strip()
 
         # Save in database
-        saved_id = datastore.save_password(username, platform, password, master_password)
+        saved_id = datastore.save_password(
+            username,
+            platform,
+            password,
+            master_password
+        )
         print(f"✅ Password saved with ID: {saved_id}")
 
 
@@ -203,7 +218,12 @@ def save_password_manually():
         return
 
     # STEP 3: Save in database
-    saved_id = datastore.save_password(username, platform, password, master_password)
+    saved_id = datastore.save_password(
+        username,
+        platform,
+        password,
+        master_password
+    )
 
     print(f"✅ Password saved with ID: {saved_id}")
 
@@ -234,22 +254,30 @@ def delete_password():
     else:
         print(f"⚠️  No password found with ID {id_to_delete}")
 
+
 def update_master_password():
     updating_password = True
     while updating_password:
-        old_password = input_password("Type in the old master password: ")
+        old_password = input_password(
+            "Type in the old master password: "
+        )
         if not datastore.check_master_password(old_password):
             print("❌ Wrong master password!")
-            updating_password = input_boolean("Would you like to retry? (Y/n): ")
+            updating_password = input_boolean(
+                "Would you like to retry? (Y/n): "
+            )
             continue
-        
+
         new_password = input_password("Type in the new master password: ")
         if datastore.update_master_password(old_password, new_password):
             print("✅ Successfully updated master password!")
             updating_password = False
         else:
             print("❌ Failed to update master password!")
-            updating_password = input_boolean("Would you like to retry? (Y/n): ")
+            updating_password = input_boolean(
+                "Would you like to retry? (Y/n): "
+            )
+
 
 def check_password_stength():
     password = input_string_notnull("Type the password to check: ")
@@ -276,16 +304,21 @@ def show_menu():
     print("  6. Check password stength")
     print("  7. Exit")
 
+
 def check_master_password():
     while not datastore.master_password_exists():
-        print("⚠️  Before running the application, please set up the master password.")
+        print(
+            "⚠️  Before running the application, "
+            "please set up the master password."
+        )
         response = input_password("\n🔒 Type in new master password: ")
         datastore.set_master_password(response)
         print("✅ Master password successfully set!")
 
+
 def main():
     datastore.init_database()
-    
+
     check_master_password()
 
     while True:
@@ -318,6 +351,7 @@ def main():
 
         else:
             print("⚠️  Invalid option! Choose a number from 1 to 7.")
+
 
 if __name__ == '__main__':
     try:
