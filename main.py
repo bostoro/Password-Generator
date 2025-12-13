@@ -99,7 +99,7 @@ def generate_random_password(length=16):
         master_password = None
         while not master_password:
             response = input_password("\n🔒 Enter master password: ")
-            if response.strip().lower() == ("q" or "quit"):
+            if response.strip().lower() in ("q", "quit"):
                 return
             elif datastore.check_master_password(response):
                 master_password = response
@@ -200,7 +200,7 @@ def save_password_manually():
     master_password = None
     while not master_password:
         response = input_password("\n🔒 Enter master password: ")
-        if response.lower() == ("q" or "quit"):
+        if response.lower() in ("q", "quit"):
             return
         elif datastore.check_master_password(response):
             master_password = response
