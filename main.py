@@ -200,7 +200,7 @@ def save_password_manually():
     master_password = None
     while not master_password:
         response = input_password("\n🔒 Enter master password: ")
-        if response.strip().lower() == ("q" or "quit"):
+        if response.lower() == ("q" or "quit"):
             return
         elif datastore.check_master_password(response):
             master_password = response
@@ -210,7 +210,7 @@ def save_password_manually():
     # STEP 1: Ask for information
     username = input("Username or email: ").strip()
     platform = input("Website (eg: https://facebook.com): ").strip()
-    password = input("Password: ").strip()
+    password = input_password("Password: ")
 
     # STEP 2: Check they're not empty
     if not username or not platform or not password:
