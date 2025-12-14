@@ -46,8 +46,11 @@ def generate_random_password(length=16):
     answer = input_integer(f"Password length (default {length}): ", True)
 
     # If user entered something, use that length
-    if answer:
-        length = int(answer)
+    if answer is not None:
+        length = answer
+    if length <= 0:
+        print("⚠️  Error: Password length must be greater than 0!")
+        return
 
     # STEP 2: Ask user which character types to include
     print("\nCharacter types to include:")
