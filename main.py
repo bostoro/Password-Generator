@@ -20,10 +20,10 @@ def generate_random_password(length=16):
         return
 
     print("\nCharacter types to include:")
-    use_uppercase = input_boolean("Include UPPERCASE letters (A-Z)? (Y/n): ")
-    use_lowercase = input_boolean("Include lowercase letters (a-z)? (Y/n): ")
-    use_numbers = input_boolean("Include numbers (0-9)? (Y/n): ")
-    use_symbols = input_boolean("Include symbols (!@#$%...)? (Y/n): ")
+    use_uppercase = input_boolean("Include UPPERCASE letters (A-Z)? (y/n): ")
+    use_lowercase = input_boolean("Include lowercase letters (a-z)? (y/n): ")
+    use_numbers = input_boolean("Include numbers (0-9)? (y/n): ")
+    use_symbols = input_boolean("Include symbols (!@#$%...)? (y/n): ")
 
     all_characters = ''
 
@@ -56,7 +56,7 @@ def generate_random_password(length=16):
     print(f"\n✅ Password generated: {password}")
     print(f"   Length: {len(password)} characters")
 
-    save = input_boolean("\nDo you want to save this password? (Y/n): ")
+    save = input_boolean("\nDo you want to save this password? (y/n): ")
 
     if save:
         master_password = None
@@ -181,7 +181,7 @@ def update_master_password():
         if not datastore.check_master_password(old_password):
             print("❌ Wrong master password!")
             updating_password = input_boolean(
-                "Would you like to retry? (Y/n): "
+                "Would you like to retry? (y/n): "
             )
             continue
 
@@ -192,7 +192,7 @@ def update_master_password():
         else:
             print("❌ Failed to update master password!")
             updating_password = input_boolean(
-                "Would you like to retry? (Y/n): "
+                "Would you like to retry? (y/n): "
             )
 
 
