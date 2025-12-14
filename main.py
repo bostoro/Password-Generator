@@ -6,60 +6,25 @@ from input_utils import input_boolean, input_integer
 from input_utils import input_password, input_string_notnull
 
 
-# ============================================
-# FUNCTION 1: GENERATE RANDOM PASSWORDS
-# ============================================
 def generate_random_password(length=16):
-    """
-    Creates a random and secure password with customizable options.
 
-    HOW IT WORKS:
-    1. Asks user for password length
-    2. Asks which character types to include
-    (uppercase, lowercase, numbers, symbols)
-    3. Prepares a list of all chosen characters
-    4. Chooses characters randomly from the list
-    5. Puts them together to create the password
-    6. Asks if user wants to save it
-
-    PARAMETERS:
-    - length: default password length (default: 16)
-
-    RETURNS:
-    - Nothing (displays password and optionally saves it)
-
-    EXAMPLE:
-    >>> generate_random_password()
-    Password length (default 16): 12
-    Include UPPERCASE letters (A-Z)? (Y/n): y
-    Include lowercase letters (a-z)? (Y/n): y
-    Include numbers (0-9)? (Y/n): y
-    Include symbols (!@#$%...)? (Y/n): n
-
-    ✅ Password generated: aB3xZ9mN2pQ7
-       Length: 12 characters
-    """
     print("\n🔐 PASSWORD GENERATOR")
     print("=" * 50)
 
-    # STEP 1: Ask user for length
     answer = input_integer(f"Password length (default {length}): ", True)
 
-    # If user entered something, use that length
     if answer is not None:
         length = answer
     if length <= 0:
         print("⚠️  Error: Password length must be greater than 0!")
         return
 
-    # STEP 2: Ask user which character types to include
     print("\nCharacter types to include:")
     use_uppercase = input_boolean("Include UPPERCASE letters (A-Z)? (Y/n): ")
     use_lowercase = input_boolean("Include lowercase letters (a-z)? (Y/n): ")
     use_numbers = input_boolean("Include numbers (0-9)? (Y/n): ")
     use_symbols = input_boolean("Include symbols (!@#$%...)? (Y/n): ")
 
-    # STEP 3: Prepare character sets based on user choices
     all_characters = ''
 
     if use_uppercase:
@@ -74,7 +39,6 @@ def generate_random_password(length=16):
     if use_symbols:
         all_characters += string.punctuation  # !, @, #, $, %, ...
 
-    # Check if at least one character type was selected
     if not all_characters:
         print("⚠️  Warning: No character types selected. Using all types.")
         all_characters = (
@@ -84,18 +48,14 @@ def generate_random_password(length=16):
             string.punctuation
         )
 
-    # STEP 4: Generate password by choosing random characters
     password = ''  # Empty string
     for i in range(length):
-        # Choose a random character and add it
         random_character = random.choice(all_characters)
         password += random_character
 
-    # STEP 5: Show the generated password
     print(f"\n✅ Password generated: {password}")
     print(f"   Length: {len(password)} characters")
 
-    # STEP 6: Ask if they want to save it
     save = input_boolean("\nDo you want to save this password? (Y/n): ")
 
     if save:
@@ -109,13 +69,11 @@ def generate_random_password(length=16):
             else:
                 print("❌ Wrong master password! Type Q to quit.")
 
-        # Ask for information
         username = input_string_notnull("Username or email: ").strip()
         platform = input_string_notnull(
             "Website (eg: https://facebook.com): "
         ).strip()
 
-        # Save in database
         saved_id = datastore.save_password(
             username,
             platform,
@@ -125,41 +83,25 @@ def generate_random_password(length=16):
         print(f"✅ Password saved with ID: {saved_id}")
 
 
-# ============================================
-# FUNCTION 2: SHOW ALL PASSWORDS
-# ============================================
 def show_saved_passwords():
-    """
-    Shows all passwords saved in the database.
-
-    WHAT IT DOES:
-    1. Asks for master password
-    2. If correct, shows real passwords
-    3. If wrong, shows only ********
-    """
     print("\n📋 SAVED PASSWORDS")
     print("=" * 50)
 
-    # STEP 1: Ask for master password (hidden for security)
     master_pwd = input_password("\n🔒 Enter master password: ")
 
-    # STEP 2: Check if it's correct
     if datastore.check_master_password(master_pwd):
         print("✅ Master password correct!\n")
-        show_real = True  # Show real passwords
+        show_real = True
     else:
         print("❌ Wrong master password! Showing only ********\n")
-        show_real = False  # Show asterisks
+        show_real = False
 
-    # STEP 3: Get all passwords from database
     passwords = datastore.get_all_passwords(master_pwd, show_real)
 
-    # STEP 4: Check if there are passwords
     if not passwords:
         print("📭 No passwords saved yet.")
         return
 
-    # STEP 5: Show passwords in table format
     print(f"Total passwords: {len(passwords)}\n")
     print("-" * 100)
     print(f"{'ID':<5} {'USERNAME':<30} {'WEBSITE':<35} {'PASSWORD':<20}")
@@ -170,9 +112,8 @@ def show_saved_passwords():
         username = pwd[1]
         platform = pwd[2]
         password = pwd[3]
-        # Don't show date for simplicity
 
-        # Truncate (shorten) long texts
+        # Truncate (shorten) long texts for it to look compact
         if len(username) > 28:
             username = username[:28] + '..'
         if len(platform) > 33:
@@ -180,23 +121,12 @@ def show_saved_passwords():
         if len(password) > 18:
             password = password[:18] + '..'
 
-        # Print the row
         print(f"{pwd_id:<5} {username:<30} {platform:<35} {password:<20}")
 
     print("-" * 100)
 
 
-# ============================================
-# FUNCTION 3: SAVE PASSWORD MANUALLY
-# ============================================
 def save_password_manually():
-    """
-    Allows user to enter and save a password manually.
-
-    WHAT IT DOES:
-    1. Asks for username, website and password
-    2. Saves everything in database (password encrypted)
-    """
     print("\n💾 SAVE A NEW PASSWORD")
     print("=" * 50)
 
@@ -210,17 +140,14 @@ def save_password_manually():
         else:
             print("❌ Wrong master password! Type Q to quit.")
 
-    # STEP 1: Ask for information
     username = input("Username or email: ").strip()
     platform = input("Website (eg: https://facebook.com): ").strip()
     password = input_password("Password: ")
 
-    # STEP 2: Check they're not empty
     if not username or not platform or not password:
         print("⚠️  All fields are required!")
         return
 
-    # STEP 3: Save in database
     saved_id = datastore.save_password(
         username,
         platform,
@@ -231,27 +158,14 @@ def save_password_manually():
     print(f"✅ Password saved with ID: {saved_id}")
 
 
-# ============================================
-# FUNCTION 4: DELETE A PASSWORD
-# ============================================
 def delete_password():
-    """
-    Deletes a password from database using its ID.
-
-    WHAT IT DOES:
-    1. Asks for password ID to delete
-    2. Deletes it from database
-    """
     print("\n🗑️  DELETE PASSWORD")
     print("=" * 50)
 
-    # STEP 1: Ask for ID
     id_to_delete = input_integer("Enter password ID to delete: ")
 
-    # STEP 2: Delete from database
     deleted = datastore.delete_password(id_to_delete)
 
-    # STEP 3: Show result
     if deleted:
         print(f"✅ Password with ID {id_to_delete} deleted!")
     else:
