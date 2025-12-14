@@ -7,10 +7,11 @@ Memorizing and generating new passwords can be annoying. Users tend to repeat ra
 The password generator solves part of the problem where the user is dependent on third party password generators. The user needs locally generated passwords. Complementary to the existing password manager a password generator is needed.
 
 **User stories:**
-1. As a user, I want to see the list of commands to see what the app is capable of.
-2. As a user, I want to select generation options of the password.
-3. As a user, I want to view the records of generated passwords along with their associated usernames and platforms.
-4. As a user, I want to get feedback on the passwords strength.
+1. As a user, I want to see the list of commands in order to see what the app is capable of.
+2. As a user, I want to select generation options of the password in order to choose how I want to generate my random password.
+3. As a user, I want to view the records of generated passwords along with their associated usernames and platforms in order to recall a generated password.
+4. As a user, I want to get feedback on the passwords strength in order to know if I should re-generate or change my password.
+5. 	5. As a user, I want to create, read, update and delete my password in order to manage my passwords in an orderly fashion.
 
 **Use cases:**
 - Show possible commands
@@ -113,6 +114,7 @@ python3 -m pip install -r requirements.txt
 - `os`: Used for file and path operations, such as checking if the menu file exists and creating new files.  
 - `dotenv`: Used to load local .env file.
 - `cryptography`: Used to encrypt/decrypt passwords.
+- `sqlite3`: Used for database storage and management of password records.
 
 
 ## 👥 Team & Contributions
