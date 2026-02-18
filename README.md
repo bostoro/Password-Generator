@@ -106,7 +106,7 @@ python3 -m pip install -r requirements.txt
 2. Open the **Terminal**
 3. Run:
 	```bash
-	python3 main.py
+	python3 app/main.py
 	```
 
 ### Libraries Used

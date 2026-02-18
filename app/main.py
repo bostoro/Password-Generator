@@ -1,9 +1,9 @@
 import random  # For generating random passwords
 import string  # Contains letters, numbers, symbols
 import datastore
-import password_utils
-from input_utils import input_boolean, input_integer
-from input_utils import input_password, input_string_notnull
+import utils.password_utils as password_utils
+from utils.input_utils import input_boolean, input_integer
+from utils.input_utils import input_password, input_string_notnull
 
 
 def generate_random_password(length=16):
