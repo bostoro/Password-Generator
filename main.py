@@ -80,7 +80,11 @@ def generate_random_password(length=16):
             password,
             master_password
         )
-        print(f"✅ Password saved with ID: {saved_id}")
+
+        if saved_id is None:
+            print(f"❌ Could not save the password. The specified username & platform pair already exists.")
+        else:
+            print(f"✅ Password saved with ID: {saved_id}")
 
 
 def show_saved_passwords():
@@ -155,7 +159,10 @@ def save_password_manually():
         master_password
     )
 
-    print(f"✅ Password saved with ID: {saved_id}")
+    if saved_id is None:
+        print(f"❌ Could not save the password. The specified username & platform pair already exists.")
+    else:
+        print(f"✅ Password saved with ID: {saved_id}")
 
 
 def delete_password():

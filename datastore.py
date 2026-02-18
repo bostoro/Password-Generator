@@ -24,7 +24,8 @@ def init_database():
             username TEXT NOT NULL,
             platform TEXT NOT NULL,
             password TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(username, platform)
         )
     ''')
     connection.commit()
@@ -128,17 +129,19 @@ def save_password(username, platform, password, master_password):
     connection = sqlite3.connect(DB_NAME)
     cursor = connection.cursor()
 
-    cursor.execute('''
-        INSERT INTO passwords (username, platform, password)
-        VALUES (?, ?, ?)
-    ''', (username, platform, encrypted_password))
-
-    password_id = cursor.lastrowid
-
-    connection.commit()
-    connection.close()
-
-    return password_id
+    try:
+        cursor.execute('''
+            INSERT INTO passwords (username, platform, password)
+            VALUES (?, ?, ?)
+        ''', (username, platform, encrypted_password))
+        password_id = cursor.lastrowid
+        connection.commit()
+        return password_id
+    except sqlite3.IntegrityError:
+        connection.rollback()
+        return None
+    finally:
+        connection.close()
 
 
 def get_all_passwords(master_password, show_real_passwords=False):
