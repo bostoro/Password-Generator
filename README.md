@@ -115,6 +115,7 @@ python3 -m pip install -r requirements.txt
 - `dotenv`: Used to load local .env file.
 - `cryptography`: Used to encrypt/decrypt passwords.
 - `sqlite3`: Used for database storage and management of password records.
+- `nicegui`: Used to build a simple web-based interface in Python.
 
 
 ## 👥 Team & Contributions
