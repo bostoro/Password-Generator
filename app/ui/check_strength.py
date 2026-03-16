@@ -3,7 +3,7 @@ import utils.password_utils as password_utils
 
 def render_check_strength():
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
-        ui.label('💪 Check Strength').classes('text-2xl font-bold mb-4 text-primary')
+        ui.label('Check Strength').classes('text-2xl font-bold mb-4 text-primary')
         
         pwd_input = ui.input('Type password to check').classes('w-full mb-4')
         result_label = ui.label('').classes('text-lg font-semibold mt-2 hidden')
@@ -21,7 +21,7 @@ def render_check_strength():
                 result_label.text = '❌ Weak Password'
                 result_label.style('color: #EF4444;')
             elif strength == 'strong':
-                result_label.text = '🔐 Strong Password!!'
+                result_label.text = '🔐 Strong Password!'
                 result_label.style('color: #10B981;')
             else:
                 result_label.text = '✅ Fine (could be stronger)'

@@ -3,7 +3,7 @@ import datastore as datastore
 
 def render_view_passwords():
     with ui.card().classes('w-full mx-auto mt-8 p-6 shadow-lg rounded-xl'):
-        ui.label('📋 View Passwords').classes('text-2xl font-bold mb-4 text-primary')
+        ui.label('View Passwords').classes('text-2xl font-bold mb-4 text-primary')
         
         master = ui.input('Master Password', password=True, password_toggle_button=True).classes('w-full max-w-md mb-4')
         

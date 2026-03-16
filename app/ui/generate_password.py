@@ -20,7 +20,7 @@ def generate_pwd(length, use_upper, use_lower, use_numbers, use_symbols):
 
 def render_generate_password():
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
-        ui.label('🔐 Generate Password').classes('text-2xl font-bold mb-4 text-primary')
+        ui.label('Generate Password').classes('text-2xl font-bold mb-4 text-primary')
         
         length_input = ui.number('Password Length', value=16, format='%.0f').classes('w-full mb-4')
         with ui.row().classes('w-full mb-4 justify-between'):

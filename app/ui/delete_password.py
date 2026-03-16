@@ -3,7 +3,7 @@ import datastore as datastore
 
 def render_delete_password():
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
-        ui.label('🗑️ Delete Password').classes('text-2xl font-bold mb-4 text-primary')
+        ui.label('Delete Password').classes('text-2xl font-bold mb-4 text-primary')
         
         pwd_id_input = ui.number('Password ID to delete', format='%.0f').classes('w-full mb-4')
         

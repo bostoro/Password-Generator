@@ -3,7 +3,7 @@ import datastore as datastore
 
 def render_update_master():
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
-        ui.label('🔑 Update Master Password').classes('text-2xl font-bold mb-4 text-primary')
+        ui.label('Update Master Password').classes('text-2xl font-bold mb-4 text-primary')
         
         old_master = ui.input('Old Master Password', password=True, password_toggle_button=True).classes('w-full mb-2')
         new_master = ui.input('New Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
