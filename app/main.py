@@ -9,7 +9,6 @@ from nicegui import ui
 
 load_dotenv()
 
-# Prepare styles dictionary for injection
 custom_colors = {}
 styles_path = os.getenv('STYLES_PATH')
 if styles_path and os.path.exists(styles_path):
