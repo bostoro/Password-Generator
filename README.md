@@ -116,6 +116,7 @@ python3 -m pip install -r requirements.txt
 - `cryptography`: Used to encrypt/decrypt passwords.
 - `sqlite3`: Used for database storage and management of password records.
 - `nicegui`: Used to build a simple web-based interface in Python.
+- `pytest-cov`: Used to write and run automated tests, helping ensure the application works correctly and making it easier to catch bugs during development.
 
 
 ## 👥 Team & Contributions
