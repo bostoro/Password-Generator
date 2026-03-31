@@ -101,6 +101,13 @@ python3 -m pip install -r requirements.txt
     python3 -m pip install requirements.txt
     ```
 
+### PyTests
+```bash
+py -m pytest -v app/test_datastore.py
+py -m coverage run app/test_datastore.py
+py -m coverage report
+```
+
 ### How to Run
 1. Open the repository in **GitHub Codespaces**
 2. Open the **Terminal**
