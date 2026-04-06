@@ -46,8 +46,7 @@ def render_generate_password():
                 username = username_input.value
                 platform = platform_input.value
                 pwd = result_label.text
-                
-                saved_id = service.save(username, platform, pwd, master)
+
 
                 if not username or not platform:
                     ui.notify('Username and platform required', type='warning')
