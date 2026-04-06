@@ -10,6 +10,26 @@ def render_save_password():
         username = ui.input('Username or Email').classes('w-full mb-2')
         platform = ui.input('Website / Platform').classes('w-full mb-2')
         password = ui.input('Password', password=True, password_toggle_button=True).classes('w-full mb-2')
+        strength_label = ui.label('').classes('text-sm font-semibold mb-2')
+
+        def on_password_change():
+            pwd = password.value
+            if not pwd:
+                strength_label.text = ''
+                return
+            strength = service.check_strength(pwd)
+            if strength == 'weak':
+                strength_label.text = '❌ Weak'
+                strength_label.style('color: #EF4444;')
+            elif strength == 'strong':
+                strength_label.text = '🔐 Strong'
+                strength_label.style('color: #10B981;')
+            else:
+                strength_label.text = '✅ Medium'
+                strength_label.style('color: #F59E0B;')
+
+        password.on('keyup', lambda: on_password_change())
+
         master = ui.input('Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
         
         def on_save():
@@ -21,6 +41,11 @@ def render_save_password():
             if not u or not p_form or not pwd or not m:
                 ui.notify('All fields are required!', type='warning')
                 return
+            
+            if not service.check_master(m):
+                ui.notify('Wrong master password!', type='negative')
+                master.value = ''
+                return
                 
             saved_id = service.save(u, p_form, pwd, m)
             if saved_id:
@@ -30,6 +55,6 @@ def render_save_password():
                 password.value = ''
                 master.value = ''
             else:
-                ui.notify('Could not save! Duplicate?', type='negative')
+                ui.notify('Duplicate entry!', type='negative')
                 
         ui.button('Save Manually', on_click=on_save).classes('w-full mt-2')
