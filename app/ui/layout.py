@@ -29,14 +29,11 @@ def build_main_ui():
         ui.label('PASSWORD MANAGER').classes('text-xl font-bold')
 
     with ui.tabs().classes('w-full mt-4') as tabs:
-        tab_save = ui.tab('1. Save')
-        tab_view = ui.tab('2. View')
-        tab_upd = ui.tab('3. Update Master')
-        tab_ext = ui.tab('4. Exit')
+        tab_view = ui.tab('1. View')
+        tab_upd = ui.tab('2. Update Master')
+        tab_ext = ui.tab('3. Exit')
 
-    with ui.tab_panels(tabs, value=tab_gen).classes('w-full max-w-5xl mx-auto bg-transparent'):
-        with ui.tab_panel(tab_save):
-            render_save_password()
+    with ui.tab_panels(tabs, value=tab_view).classes('w-full max-w-5xl mx-auto bg-transparent'):
         with ui.tab_panel(tab_view):
             render_view_passwords()
         with ui.tab_panel(tab_upd):

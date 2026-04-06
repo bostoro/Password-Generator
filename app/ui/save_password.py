@@ -38,15 +38,16 @@ def render_save_password():
 
             ui.button('Generate', on_click=on_generate).classes('w-full mt-2')
 
-        with ui.row().classes('items-center gap-2 mb-2 w-full justify-between'):
+        with ui.row().classes('items-center gap-1 mb-2 w-full justify-between'):
             with ui.dialog() as info_dialog, ui.card():
                 ui.label('Password Strength Guide').classes('text-lg font-bold mb-2')
                 ui.label('❌ Weak: <6 chars, or missing uppercase, lowercase, or numbers')
                 ui.label('✅ Medium: 6+ chars with uppercase, lowercase and numbers')
                 ui.label('🔐 Strong: 12+ chars with uppercase, lowercase, numbers and symbols')
                 ui.button('Close', on_click=info_dialog.close).classes('mt-4')
-            ui.icon('info').classes('text-gray-400 cursor-pointer').on('click', lambda: info_dialog.open())
-            strength_label = ui.label('').classes('text-sm font-semibold')
+            with ui.row().classes('items-center gap-0'):
+                ui.icon('info').classes('text-gray-400 cursor-pointer text-sm').on('click', lambda: info_dialog.open())
+                strength_label = ui.label('').classes('text-sm font-semibold')
             ui.button('Generate', on_click=lambda: generate_dialog.open()).classes('shrink-0')
 
         def on_password_change():
