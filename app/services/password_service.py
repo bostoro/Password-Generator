@@ -23,3 +23,8 @@ class PasswordService:
     
     def check_master(self, master: str) -> bool:
         return datastore.check_master_password(master)
+    
+    def update_password(self, password_id: int, username: str, platform: str, password: str, master: str) -> bool:
+        if not datastore.check_master_password(master):
+            return False
+        return datastore.update_password(password_id, username, platform, password, master)

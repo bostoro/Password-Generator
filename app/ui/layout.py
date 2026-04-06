@@ -2,7 +2,6 @@ from nicegui import ui
 from .generate_password import render_generate_password
 from .save_password import render_save_password
 from .view_passwords import render_view_passwords
-from .delete_password import render_delete_password
 from .update_master import render_update_master
 from .check_strength import render_check_strength
 from .exit_app import render_exit_app
@@ -35,10 +34,9 @@ def build_main_ui():
         tab_gen = ui.tab('1. Generate')
         tab_save = ui.tab('2. Save')
         tab_view = ui.tab('3. View')
-        tab_del = ui.tab('4. Delete')
-        tab_upd = ui.tab('5. Update Master')
-        tab_chk = ui.tab('6. Check Strength')
-        tab_ext = ui.tab('7. Exit')
+        tab_upd = ui.tab('4. Update Master')
+        tab_chk = ui.tab('5. Check Strength')
+        tab_ext = ui.tab('6. Exit')
 
     with ui.tab_panels(tabs, value=tab_gen).classes('w-full max-w-5xl mx-auto bg-transparent'):
         with ui.tab_panel(tab_gen):
@@ -47,8 +45,6 @@ def build_main_ui():
             render_save_password()
         with ui.tab_panel(tab_view):
             render_view_passwords()
-        with ui.tab_panel(tab_del):
-            render_delete_password()
         with ui.tab_panel(tab_upd):
             render_update_master()
         with ui.tab_panel(tab_chk):

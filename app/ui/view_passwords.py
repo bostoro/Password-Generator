@@ -23,23 +23,111 @@ def render_view_passwords():
         with table_container:
             table = ui.table(columns=columns, rows=[], row_key='id').classes('w-full')
 
+            with ui.dialog() as confirm_dialog, ui.card():
+                confirm_label = ui.label('').classes('text-lg font-semibold mb-4')
+                master_confirm = ui.input('Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
+                error_label = ui.label('').classes('text-red-500 hidden')
+                
+                pending_row = {'id': None}
+                
+                def on_cancel():
+                    confirm_dialog.close()
+                    master_confirm.value = ''
+                    error_label.classes(add='hidden')
+
+                def on_confirm_delete():
+                    if not service.check_master(master_confirm.value):
+                        error_label.text = 'Wrong master password!'
+                        error_label.classes(remove='hidden')
+                        return
+                    success = service.delete(pending_row['id'])
+                    if success:
+                        ui.notify('Password deleted!', type='positive')
+                        table.rows[:] = [r for r in table.rows if r['id'] != pending_row['id']]
+                        table.update()
+                    confirm_dialog.close()
+                    master_confirm.value = ''
+                    error_label.classes(add='hidden')
+
+                with ui.row():
+                    ui.button('Cancel', on_click=on_cancel)
+                    ui.button('Delete', color='red', on_click=on_confirm_delete)
+
             def on_delete(e):
-                pwd_id = e.args['id']
-                success = service.delete(pwd_id)
-                if success:
-                    ui.notify(f'Password {pwd_id} deleted!', type='positive')
-                    table.rows[:] = [r for r in table.rows if r['id'] != pwd_id]
-                    table.update()
-                else:
-                    ui.notify(f'Could not delete password {pwd_id}', type='negative')
+                pending_row['id'] = e.args['id']
+                confirm_label.text = f"Delete entry for '{e.args['username']}' on '{e.args['platform']}'?"
+                master_confirm.value = ''
+                error_label.classes(add='hidden')
+                confirm_dialog.open()
 
             table.add_slot('body-cell-actions', '''
                 <q-td :props="props">
+                    <q-btn flat round icon="edit" color="primary"
+                        @click="$parent.$emit('edit', props.row)" />
                     <q-btn flat round icon="delete" color="red"
                         @click="$parent.$emit('delete', props.row)" />
                 </q-td>
             ''')
             table.on('delete', on_delete)
+
+            with ui.dialog() as edit_dialog, ui.card():
+                edit_label = ui.label('').classes('text-lg font-semibold mb-4')
+                edit_username = ui.input('Username').classes('w-full mb-2')
+                edit_platform = ui.input('Platform').classes('w-full mb-2')
+                edit_password = ui.input('Password', password=True, password_toggle_button=True).classes('w-full mb-2')
+                edit_master = ui.input('Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
+                edit_error = ui.label('').classes('text-red-500 hidden')
+
+                pending_edit = {'id': None}
+
+                def on_edit_cancel():
+                    edit_dialog.close()
+                    edit_master.value = ''
+                    edit_error.classes(add='hidden')
+
+                def on_confirm_edit():
+                    if not service.check_master(edit_master.value):
+                        edit_error.text = 'Wrong master password!'
+                        edit_error.classes(remove='hidden')
+                        return
+                    success = service.update_password(
+                        pending_edit['id'],
+                        edit_username.value,
+                        edit_platform.value,
+                        edit_password.value,
+                        edit_master.value
+                    )
+                    if success:
+                        ui.notify('Password updated!', type='positive')
+                        for row in table.rows:
+                            if row['id'] == pending_edit['id']:
+                                row['username'] = edit_username.value
+                                row['platform'] = edit_platform.value
+                                row['password'] = '********'
+                        table.update()
+                    else:
+                        edit_error.text = 'Update failed. Duplicate entry?'
+                        edit_error.classes(remove='hidden')
+                        return
+                    edit_dialog.close()
+                    edit_master.value = ''
+                    edit_error.classes(add='hidden')
+
+                with ui.row():
+                    ui.button('Cancel', on_click=on_edit_cancel)
+                    ui.button('Save', color='primary', on_click=on_confirm_edit)
+
+            def on_edit(e):
+                pending_edit['id'] = e.args['id']
+                edit_label.text = f"Edit entry for '{e.args['username']}' on '{e.args['platform']}'"
+                edit_username.value = e.args['username']
+                edit_platform.value = e.args['platform']
+                edit_password.value = ''
+                edit_master.value = ''
+                edit_error.classes(add='hidden')
+                edit_dialog.open()
+
+            table.on('edit', on_edit)
         
         def on_view():
             m = master.value

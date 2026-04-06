@@ -110,3 +110,20 @@ def delete_password(password_id):
         session.delete(entry)
         session.commit()
         return True
+
+
+def update_password(password_id: int, username: str, platform: str, password: str, master: str) -> bool:
+    encrypted_password = pe.encrypt_password(password, master)
+    with Session(_get_engine()) as session:
+        try:
+            entry = session.get(Password, password_id)
+            if entry is None:
+                return False
+            entry.username = username
+            entry.platform = platform
+            entry.password = encrypted_password
+            session.commit()
+            return True
+        except Exception:
+            session.rollback()
+            return False
