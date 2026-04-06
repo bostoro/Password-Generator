@@ -1,5 +1,7 @@
 from nicegui import ui
-import datastore as datastore
+from services.password_service import PasswordService
+
+service = PasswordService()
 
 def render_delete_password():
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
@@ -13,7 +15,7 @@ def render_delete_password():
                 ui.notify('Please provide an ID', type='warning')
                 return
             
-            success = datastore.delete_password(int(pwd_id))
+            success = service.delete(int(pwd_id))
             if success:
                 ui.notify(f'Password {int(pwd_id)} deleted successfully!', type='positive')
                 pwd_id_input.value = None

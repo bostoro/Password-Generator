@@ -1,7 +1,9 @@
 import string
 import random
 from nicegui import ui
-import datastore as datastore
+from services.password_service import PasswordService
+
+service = PasswordService()
 
 def generate_pwd(length, use_upper, use_lower, use_numbers, use_symbols):
     all_chars = ''
@@ -45,14 +47,13 @@ def render_generate_password():
                 platform = platform_input.value
                 pwd = result_label.text
                 
-                if not datastore.check_master_password(master):
-                    ui.notify('Wrong master password!', type='negative')
-                    return
+                saved_id = service.save(username, platform, pwd, master)
+
                 if not username or not platform:
                     ui.notify('Username and platform required', type='warning')
                     return
-                    
-                saved_id = datastore.save_password(username, platform, pwd, master)
+
+                saved_id = service.save(username, platform, pwd, master)
                 if saved_id:
                     ui.notify(f'Password saved! ID: {saved_id}', type='positive')
                     save_container.classes(add='hidden')
@@ -61,7 +62,7 @@ def render_generate_password():
                     platform_input.value = ''
                     master_input.value = ''
                 else:
-                    ui.notify('Save failed. Duplicate entry?', type='negative')
+                    ui.notify('Save failed. Wrong master or duplicate?', type='negative')
 
             ui.button('Save Password', on_click=on_save).classes('w-full mt-2')
 

@@ -1,5 +1,7 @@
 from nicegui import ui
-import datastore as datastore
+from services.password_service import PasswordService
+
+service = PasswordService()
 
 def render_update_master():
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
@@ -15,7 +17,7 @@ def render_update_master():
                 ui.notify('Both fields required', type='warning')
                 return
             
-            if datastore.update_master_password(old, new):
+            if service.update_master(old, new):
                 ui.notify('Master password updated successfully!', type='positive')
                 old_master.value = ''
                 new_master.value = ''

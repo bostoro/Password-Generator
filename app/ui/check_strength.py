@@ -1,5 +1,7 @@
 from nicegui import ui
-import utils.password_utils as password_utils
+from services.password_service import PasswordService
+
+service = PasswordService()
 
 def render_check_strength():
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
@@ -14,7 +16,7 @@ def render_check_strength():
                 ui.notify('Enter a password', type='warning')
                 return
                 
-            strength = password_utils.get_password_strength(pwd)
+            strength = service.check_strength(pwd)
             result_label.classes(remove='hidden')
             
             if strength == 'weak':

@@ -1,5 +1,7 @@
 from nicegui import ui
-import datastore as datastore
+from services.password_service import PasswordService
+
+service = PasswordService()
 
 def render_save_password():
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
@@ -20,11 +22,7 @@ def render_save_password():
                 ui.notify('All fields are required!', type='warning')
                 return
                 
-            if not datastore.check_master_password(m):
-                ui.notify('Wrong master password!', type='negative')
-                return
-                
-            saved_id = datastore.save_password(u, p_form, pwd, m)
+            saved_id = service.save(u, p_form, pwd, m)
             if saved_id:
                 ui.notify(f'Password saved with ID: {saved_id}', type='positive')
                 username.value = ''
