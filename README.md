@@ -121,7 +121,7 @@ py -m coverage report
 - `os`: Used for file and path operations, such as checking if the menu file exists and creating new files.  
 - `dotenv`: Used to load local .env file.
 - `cryptography`: Used to encrypt/decrypt passwords.
-- `sqlite3`: Used for database storage and management of password records.
+- `sqlalchemy`: Used for database storage and management of password records.
 - `nicegui`: Used to build a simple web-based interface in Python.
 - `pytest-cov`: Used to write and run automated tests, helping ensure the application works correctly and making it easier to catch bugs during development.
 
