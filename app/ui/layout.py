@@ -1,5 +1,4 @@
 from nicegui import ui
-from .generate_password import render_generate_password
 from .save_password import render_save_password
 from .view_passwords import render_view_passwords
 from .update_master import render_update_master
@@ -30,15 +29,12 @@ def build_main_ui():
         ui.label('PASSWORD MANAGER').classes('text-xl font-bold')
 
     with ui.tabs().classes('w-full mt-4') as tabs:
-        tab_gen = ui.tab('1. Generate')
-        tab_save = ui.tab('2. Save')
-        tab_view = ui.tab('3. View')
-        tab_upd = ui.tab('4. Update Master')
-        tab_ext = ui.tab('5. Exit')
+        tab_save = ui.tab('1. Save')
+        tab_view = ui.tab('2. View')
+        tab_upd = ui.tab('3. Update Master')
+        tab_ext = ui.tab('4. Exit')
 
     with ui.tab_panels(tabs, value=tab_gen).classes('w-full max-w-5xl mx-auto bg-transparent'):
-        with ui.tab_panel(tab_gen):
-            render_generate_password()
         with ui.tab_panel(tab_save):
             render_save_password()
         with ui.tab_panel(tab_view):
