@@ -10,7 +10,15 @@ def render_save_password():
         username = ui.input('Username or Email').classes('w-full mb-2')
         platform = ui.input('Website / Platform').classes('w-full mb-2')
         password = ui.input('Password', password=True, password_toggle_button=True).classes('w-full mb-2')
-        strength_label = ui.label('').classes('text-sm font-semibold mb-2')
+        with ui.row().classes('items-center gap-2 mb-2'):
+            strength_label = ui.label('').classes('text-sm font-semibold')
+            with ui.dialog() as info_dialog, ui.card():
+                ui.label('Password Strength Guide').classes('text-lg font-bold mb-2')
+                ui.label('❌ Weak: <6 chars, or missing uppercase, lowercase, or numbers')
+                ui.label('✅ Medium: 6+ chars with uppercase, lowercase and numbers')
+                ui.label('🔐 Strong: 12+ chars with uppercase, lowercase, numbers and symbols')
+                ui.button('Close', on_click=info_dialog.close).classes('mt-4')
+            ui.icon('info').classes('text-gray-400 cursor-pointer').on('click', lambda: info_dialog.open())
 
         def on_password_change():
             pwd = password.value
