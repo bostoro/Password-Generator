@@ -137,6 +137,7 @@ def render_view_passwords():
             elif service.check_master(m):
                 show_real = True
                 ui.notify('Master password correct!', type='positive')
+                master.value = ''
             else:
                 show_real = False
                 ui.notify('Wrong master password! Showing masked.', type='negative')
@@ -157,4 +158,5 @@ def render_view_passwords():
             table.update()
             table_container.classes(remove='hidden')
             
+        master.on('keydown.enter', lambda: on_view())
         ui.button('Load Passwords', on_click=on_view).classes('mt-2')
