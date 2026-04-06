@@ -9,9 +9,36 @@ def render_save_password():
         
         username = ui.input('Username or Email').classes('w-full mb-2')
         platform = ui.input('Website / Platform').classes('w-full mb-2')
-        password = ui.input('Password', password=True, password_toggle_button=True).classes('w-full mb-2')
-        with ui.row().classes('items-center gap-2 mb-2'):
-            strength_label = ui.label('').classes('text-sm font-semibold')
+        with ui.row().classes('w-full items-center gap-2 mb-2'):
+            password = ui.input('Password', password=True, password_toggle_button=True).classes('w-full')
+        with ui.dialog() as generate_dialog, ui.card():
+            ui.label('Generate Password').classes('text-lg font-bold mb-2')
+            length_input = ui.number('Length', value=16, format='%.0f').classes('w-full mb-2')
+            
+            with ui.expansion('Advanced options').classes('w-full mb-2'):
+                upper_cb = ui.checkbox('Uppercase (A-Z)', value=True)
+                lower_cb = ui.checkbox('Lowercase (a-z)', value=True)
+                num_cb = ui.checkbox('Numbers (0-9)', value=True)
+                sym_cb = ui.checkbox('Symbols (!@#)', value=True)
+
+            def on_generate():
+                import string, random
+                all_chars = ''
+                if upper_cb.value: all_chars += string.ascii_uppercase
+                if lower_cb.value: all_chars += string.ascii_lowercase
+                if num_cb.value: all_chars += string.digits
+                if sym_cb.value: all_chars += string.punctuation
+                if not all_chars:
+                    all_chars = string.ascii_letters + string.digits
+                length = int(length_input.value or 16)
+                pwd = ''.join(random.choice(all_chars) for _ in range(length))
+                password.value = pwd
+                on_password_change()
+                generate_dialog.close()
+
+            ui.button('Generate', on_click=on_generate).classes('w-full mt-2')
+
+        with ui.row().classes('items-center gap-2 mb-2 w-full justify-between'):
             with ui.dialog() as info_dialog, ui.card():
                 ui.label('Password Strength Guide').classes('text-lg font-bold mb-2')
                 ui.label('❌ Weak: <6 chars, or missing uppercase, lowercase, or numbers')
@@ -19,6 +46,8 @@ def render_save_password():
                 ui.label('🔐 Strong: 12+ chars with uppercase, lowercase, numbers and symbols')
                 ui.button('Close', on_click=info_dialog.close).classes('mt-4')
             ui.icon('info').classes('text-gray-400 cursor-pointer').on('click', lambda: info_dialog.open())
+            strength_label = ui.label('').classes('text-sm font-semibold')
+            ui.button('Generate', on_click=lambda: generate_dialog.open()).classes('shrink-0')
 
         def on_password_change():
             pwd = password.value
