@@ -1,6 +1,7 @@
 import datastore
 from utils.password_utils import get_password_strength
-
+import string
+import random
 
 class PasswordService:
 
@@ -28,3 +29,15 @@ class PasswordService:
         if not datastore.check_master_password(master):
             return False
         return datastore.update_password(password_id, username, platform, password, master)
+    
+    def generate(self, length: int = 16, use_upper: bool = True, use_lower: bool = True, use_numbers: bool = True, use_symbols: bool = True) -> str:
+        all_chars = ''
+        if use_upper: all_chars += string.ascii_uppercase
+        if use_lower: all_chars += string.ascii_lowercase
+        if use_numbers: all_chars += string.digits
+        if use_symbols: all_chars += string.punctuation
+        if not all_chars:
+            all_chars = string.ascii_letters + string.digits
+        if length <= 0:
+            return ''
+        return ''.join(random.choice(all_chars) for _ in range(length))

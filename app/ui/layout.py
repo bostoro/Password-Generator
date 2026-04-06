@@ -1,5 +1,4 @@
 from nicegui import ui
-from .save_password import render_save_password
 from .view_passwords import render_view_passwords
 from .update_master import render_update_master
 from .exit_app import render_exit_app
@@ -27,19 +26,15 @@ def setup_master_password_ui(on_success):
 def build_main_ui():
     with ui.header().classes('items-center bg-primary text-white justify-between px-6 py-2'):
         ui.label('PASSWORD MANAGER').classes('text-xl font-bold')
+        with ui.row().classes('gap-2'):
+            with ui.dialog() as update_master_dialog, ui.card():
+                render_update_master()
+            ui.icon('key', size='sm').classes('cursor-pointer').on('click', lambda: update_master_dialog.open())
+            with ui.dialog() as exit_dialog, ui.card():
+                render_exit_app()
+            ui.icon('close', size='sm').classes('cursor-pointer').on('click', lambda: exit_dialog.open())
 
-    with ui.tabs().classes('w-full mt-4') as tabs:
-        tab_view = ui.tab('1. View')
-        tab_upd = ui.tab('2. Update Master')
-        tab_ext = ui.tab('3. Exit')
-
-    with ui.tab_panels(tabs, value=tab_view).classes('w-full max-w-5xl mx-auto bg-transparent'):
-        with ui.tab_panel(tab_view):
-            render_view_passwords()
-        with ui.tab_panel(tab_upd):
-            render_update_master()
-        with ui.tab_panel(tab_ext):
-            render_exit_app()
+    render_view_passwords()
 
 _styles_injector = None
 

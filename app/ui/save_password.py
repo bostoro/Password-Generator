@@ -23,27 +23,29 @@ def render_save_password():
 
             def on_generate():
                 import string, random
-                all_chars = ''
-                if upper_cb.value: all_chars += string.ascii_uppercase
-                if lower_cb.value: all_chars += string.ascii_lowercase
-                if num_cb.value: all_chars += string.digits
-                if sym_cb.value: all_chars += string.punctuation
-                if not all_chars:
-                    all_chars = string.ascii_letters + string.digits
                 length = int(length_input.value or 16)
-                pwd = ''.join(random.choice(all_chars) for _ in range(length))
-                password.value = pwd
-                on_password_change()
-                generate_dialog.close()
+                pwd = service.generate(
+                    length,
+                    upper_cb.value,
+                    lower_cb.value,
+                    num_cb.value,
+                    sym_cb.value
+                )
+                if pwd:
+                    password.value = pwd
+                    on_password_change()
+                    generate_dialog.close()
+                else:
+                    ui.notify('Invalid length', type='negative')
 
             ui.button('Generate', on_click=on_generate).classes('w-full mt-2')
 
         with ui.row().classes('items-center gap-1 mb-2 w-full justify-between'):
             with ui.dialog() as info_dialog, ui.card():
                 ui.label('Password Strength Guide').classes('text-lg font-bold mb-2')
-                ui.label('❌ Weak: <6 chars, or missing uppercase, lowercase, or numbers')
-                ui.label('✅ Medium: 6+ chars with uppercase, lowercase and numbers')
-                ui.label('🔐 Strong: 12+ chars with uppercase, lowercase, numbers and symbols')
+                ui.label('❌ Weak: <6 characters, or missing uppercase, lowercase, or numbers or symbols')
+                ui.label('✅ Medium: >=6 characters with uppercase, lowercase and numbers and symbols')
+                ui.label('🔐 Strong: >=12 characters with uppercase, lowercase, numbers and symbols')
                 ui.button('Close', on_click=info_dialog.close).classes('mt-4')
             with ui.row().classes('items-center gap-0'):
                 ui.icon('info').classes('text-gray-400 cursor-pointer text-sm').on('click', lambda: info_dialog.open())
@@ -95,4 +97,4 @@ def render_save_password():
             else:
                 ui.notify('Duplicate entry!', type='negative')
                 
-        ui.button('Save Manually', on_click=on_save).classes('w-full mt-2')
+        ui.button('Save', on_click=on_save).classes('w-full mt-2')
