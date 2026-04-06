@@ -103,7 +103,7 @@ def get_all_passwords(master_password, show_real_passwords=False):
 
 
 def delete_password(password_id):
-     with Session(_get_engine()) as session:
+    with Session(_get_engine()) as session:
         entry = session.get(Password, password_id)
         if entry is None:
             return False
