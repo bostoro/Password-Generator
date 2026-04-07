@@ -25,3 +25,9 @@ __pycache__/
 .DS_Store
 
 htmlcov
+
+.pytest*
+
+.vscode
+
+.claude

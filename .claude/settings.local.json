@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(python -m pytest test_datastore.py -v)",
-      "Bash(python3 -m pytest test_datastore.py -v)",
-      "Bash(py -m pytest test_datastore.py -v)"
-    ]
-  }
-}
