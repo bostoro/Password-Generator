@@ -88,3 +88,27 @@ def test_password_strength_logic():
     assert get_password_strength("12345") == "weak"
     assert get_password_strength("Medium123") == "medium"
     assert get_password_strength("SuperStrongP@ssw0rd!") == "strong"
+
+def test_update_password():
+    master = "Master123!"
+    datastore.set_master_password(master)
+    
+    pwd_id = datastore.save_password("user1", "siteA", "pass1", master)
+    
+    success = datastore.update_password(pwd_id, "user1_edited", "siteA_edited", "pass1_edited", master)
+    assert success is True
+    
+    results = datastore.get_all_passwords(master, show_real_passwords=True)
+    assert results[0][1] == "user1_edited"
+    assert results[0][2] == "siteA_edited"
+    assert results[0][3] == "pass1_edited"
+
+def test_update_password_duplicate():
+    master = "Master123!"
+    datastore.set_master_password(master)
+    
+    datastore.save_password("user1", "siteA", "pass1", master)
+    pwd_id = datastore.save_password("user2", "siteB", "pass2", master)
+    
+    success = datastore.update_password(pwd_id, "user1", "siteA", "pass2_edited", master)
+    assert success is False, "Should fail when editing into a duplicate username+platform"
