@@ -3,7 +3,7 @@ import utils.password_utils as pe
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from app.model.models import Base, Meta, Password
+from model.models import Base, Meta, Password
 
 DB_FILE_NAME = os.getenv('DB_FILE_NAME')
 
