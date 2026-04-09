@@ -136,18 +136,22 @@ def render_view_passwords():
         
         def on_view():
             m = master.value
+            
             if not m:
-                ui.notify('Master password required to view actual passwords!', type='warning')
-                show_real = False
-            elif service.check_master(m):
-                show_real = True
-                ui.notify('Master password correct!', type='positive')
+                ui.notify('Master password required to view passwords!', type='warning')
+                table_container.classes(add='hidden')
+                return
+            
+            if not service.check_master(m):
+                ui.notify('Wrong master password!', type='negative')
                 master.value = ''
-            else:
-                show_real = False
-                ui.notify('Wrong master password! Showing masked.', type='negative')
-                
-            passwords = service.get_all(m if show_real else "", show_real)
+                table_container.classes(add='hidden')
+                return
+
+
+            ui.notify('Master password correct!', type='positive')
+            
+            passwords = service.get_all(m, True)
             
             rows = []
             for pwd in passwords:
@@ -162,6 +166,8 @@ def render_view_passwords():
             table.rows[:] = rows
             table.update()
             table_container.classes(remove='hidden')
+            
+            master.value = ''
             
         master.on('keydown.enter', lambda: on_view())
         ui.button('Load Passwords', on_click=on_view).classes('mt-2')
