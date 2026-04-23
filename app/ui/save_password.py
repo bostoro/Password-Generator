@@ -1,9 +1,7 @@
 from nicegui import ui
-from services.password_service import PasswordService
 
-service = PasswordService()
 
-def render_save_password():
+def render_save_password(service):
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
         ui.label('Save a Password').classes('text-2xl font-bold mb-4 text-primary')
         

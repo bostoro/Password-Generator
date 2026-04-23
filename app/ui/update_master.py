@@ -1,9 +1,6 @@
 from nicegui import ui
-from services.password_service import PasswordService
 
-service = PasswordService()
-
-def render_update_master():
+def render_update_master(service):
     with ui.card().classes('w-full max-w-md mx-auto mt-8 p-6 shadow-lg rounded-xl'):
         ui.label('Update Master Password').classes('text-2xl font-bold mb-4 text-primary')
         

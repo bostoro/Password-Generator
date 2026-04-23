@@ -5,28 +5,32 @@ import random
 
 class PasswordService:
 
+    def __init__(self, username: str, meta_id: int):
+        self._username = username
+        self._meta_id = meta_id
+
     def save(self, username: str, platform: str, password: str, master: str) -> int | None:
-        if not datastore.check_master_password(master):
+        if not datastore.check_master_password(self._username, master):
             return None
-        return datastore.save_password(username, platform, password, master)
+        return datastore.save_password(self._meta_id, username, platform, password, master)
 
     def delete(self, password_id: int) -> bool:
         return datastore.delete_password(password_id)
 
     def get_all(self, master: str, show_real: bool = False) -> list:
-        return datastore.get_all_passwords(master, show_real_passwords=show_real)
+        return datastore.get_all_passwords(self._meta_id, master, show_real_passwords=show_real)
 
     def check_strength(self, password: str) -> str:
         return get_password_strength(password)
 
     def update_master(self, old_master: str, new_master: str) -> bool:
-        return datastore.update_master_password(old_master, new_master)
+        return datastore.update_master_password(self._username, old_master, new_master)
     
     def check_master(self, master: str) -> bool:
-        return datastore.check_master_password(master)
+        return datastore.check_master_password(self._username, master)
     
     def update_password(self, password_id: int, username: str, platform: str, password: str, master: str) -> bool:
-        if not datastore.check_master_password(master):
+        if not datastore.check_master_password(self._username, master):
             return False
         return datastore.update_password(password_id, username, platform, password, master)
     

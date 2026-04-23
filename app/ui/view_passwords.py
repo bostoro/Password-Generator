@@ -1,17 +1,14 @@
 from nicegui import ui
-from services.password_service import PasswordService
 from .save_password import render_save_password
 
-service = PasswordService()
-
-def render_view_passwords():
+def render_view_passwords(service):
     with ui.card().classes('w-full mx-auto mt-8 p-6 shadow-lg rounded-xl'):
         ui.label('View Passwords').classes('text-2xl font-bold mb-4 text-primary')
         
         with ui.row().classes('w-full items-center gap-2 mb-4'):
             master = ui.input('Master Password', password=True, password_toggle_button=True).classes('w-full max-w-md')
             with ui.dialog() as save_dialog, ui.card().classes('w-full max-w-md'):
-                render_save_password()
+                render_save_password(service)
             ui.button('+', on_click=lambda: save_dialog.open()).classes('text-xl font-bold ml-auto')
         
         table_container = ui.column().classes('w-full hidden')
