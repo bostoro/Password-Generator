@@ -1,8 +1,9 @@
+from doctest import master
+
 import datastore
 from utils.password_utils import get_password_strength
 import string
-import random
-
+import secrets
 class PasswordService:
 
     def __init__(self, username: str, meta_id: int):
@@ -15,7 +16,7 @@ class PasswordService:
         return datastore.save_password(self._meta_id, username, platform, password, master)
 
     def delete(self, password_id: int) -> bool:
-        return datastore.delete_password(password_id)
+        return datastore.delete_password(self._meta_id, password_id)
 
     def get_all(self, master: str, show_real: bool = False) -> list:
         return datastore.get_all_passwords(self._meta_id, master, show_real_passwords=show_real)
@@ -32,7 +33,7 @@ class PasswordService:
     def update_password(self, password_id: int, username: str, platform: str, password: str, master: str) -> bool:
         if not datastore.check_master_password(self._username, master):
             return False
-        return datastore.update_password(password_id, username, platform, password, master)
+        return datastore.update_password(self._meta_id, password_id, username, platform, password, master)
     
     def generate(self, length: int = 16, use_upper: bool = True, use_lower: bool = True, use_numbers: bool = True, use_symbols: bool = True) -> str:
         all_chars = ''
@@ -44,4 +45,4 @@ class PasswordService:
             all_chars = string.ascii_letters + string.digits
         if length <= 0:
             return ''
-        return ''.join(random.choice(all_chars) for _ in range(length))
+        return ''.join(secrets.choice(all_chars) for _ in range(length))

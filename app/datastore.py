@@ -107,23 +107,25 @@ def get_all_passwords(meta_id: int, master_password: str, show_real_passwords=Fa
                 password = '********'
             results.append((row.id, row.username, row.platform, password, row.created_at))
         return results
+    
 
-
-def delete_password(password_id):
+def delete_password(meta_id: int, password_id: int) -> bool:
     with Session(_get_engine()) as session:
-        entry = session.get(Password, password_id)
+        # Añadimos la comprobación de meta_id para evitar IDOR
+        entry = session.query(Password).filter_by(id=password_id, meta_id=meta_id).first()
         if entry is None:
             return False
         session.delete(entry)
         session.commit()
         return True
+    
 
-
-def update_password(password_id: int, username: str, platform: str, password: str, master: str) -> bool:
+def update_password(meta_id: int, password_id: int, username: str, platform: str, password: str, master: str) -> bool:
     encrypted_password = pe.encrypt_password(password, master)
     with Session(_get_engine()) as session:
         try:
-            entry = session.get(Password, password_id)
+            # Añadimos la comprobación de meta_id para evitar IDOR
+            entry = session.query(Password).filter_by(id=password_id, meta_id=meta_id).first()
             if entry is None:
                 return False
             entry.username = username
