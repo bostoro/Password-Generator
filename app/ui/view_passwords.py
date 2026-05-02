@@ -1,6 +1,30 @@
 from nicegui import ui
 from .save_password import render_save_password
 
+# ✅ FIX: aggiunto shared=True
+ui.add_head_html('''
+<style>
+.password-cell {
+    max-width: 280px;
+}
+
+.password-scroll {
+    max-width: 280px;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: block;
+}
+
+.actions-cell {
+    position: sticky;
+    right: 0;
+    background: white;
+    z-index: 2;
+}
+</style>
+''', shared=True)
+
+
 def render_view_passwords(service):
     with ui.card().classes('w-full mx-auto mt-8 p-6 shadow-lg rounded-xl'):
         ui.label('View Passwords').classes('text-2xl font-bold mb-4 text-primary')
@@ -62,14 +86,25 @@ def render_view_passwords(service):
                 error_label.classes(add='hidden')
                 confirm_dialog.open()
 
+            # ✅ PASSWORD SCROLL
+            table.add_slot('body-cell-password', '''
+                <q-td :props="props" class="password-cell">
+                    <div class="password-scroll">
+                        {{ props.row.password }}
+                    </div>
+                </q-td>
+            ''')
+
+            # ✅ PINNED ACTIONS
             table.add_slot('body-cell-actions', '''
-                <q-td :props="props">
+                <q-td :props="props" class="actions-cell">
                     <q-btn flat round icon="edit" color="primary"
                         @click="$parent.$emit('edit', props.row)" />
                     <q-btn flat round icon="delete" color="red"
                         @click="$parent.$emit('delete', props.row)" />
                 </q-td>
             ''')
+
             table.on('delete', on_delete)
 
             with ui.dialog() as edit_dialog, ui.card():
@@ -144,7 +179,6 @@ def render_view_passwords(service):
                 master.value = ''
                 table_container.classes(add='hidden')
                 return
-
 
             ui.notify('Master password correct!', type='positive')
             
