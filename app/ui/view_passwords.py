@@ -14,7 +14,7 @@ def render_view_passwords(service):
         table_container = ui.column().classes('w-full hidden')
         
         columns = [
-            {'name': 'id', 'label': 'ID', 'field': 'id', 'sortable': True},
+            {'name': 'id', 'label': 'ID', 'field': 'id', 'sortable': True, 'classes': 'hidden', 'headerClasses': 'hidden'}, 
             {'name': 'username', 'label': 'Username', 'field': 'username', 'sortable': True},
             {'name': 'platform', 'label': 'Platform', 'field': 'platform', 'sortable': True},
             {'name': 'password', 'label': 'Password', 'field': 'password'},
