@@ -20,6 +20,12 @@ class PasswordService:
 
     def get_all(self, master: str, show_real: bool = False) -> list:
         return datastore.get_all_passwords(self._meta_id, master, show_real_passwords=show_real)
+    
+    def get_password(self, password_id: int, master: str) -> str | None:
+        """Decrypt and return a single password by ID on demand. Never stored in the browser."""
+        if not datastore.check_master_password(self._username, master):
+            return None
+        return datastore.get_password_by_id(password_id, self._meta_id, master)
 
     def check_strength(self, password: str) -> str:
         return get_password_strength(password)

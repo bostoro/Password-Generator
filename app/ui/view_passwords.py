@@ -27,35 +27,47 @@ ui.add_head_html('''
 
 def render_view_passwords(service):
     with ui.card().classes('w-full mx-auto mt-8 p-6 shadow-lg rounded-xl'):
-        ui.label('View Passwords').classes('text-2xl font-bold mb-4 text-primary')
-        
+        ui.label('View Passwords').classes(
+            'text-2xl font-bold mb-4 text-primary')
+
         with ui.row().classes('w-full items-center gap-2 mb-4'):
-            master = ui.input('Master Password', password=True, password_toggle_button=True).classes('w-full max-w-md')
+            master = ui.input('Master Password', password=True,
+                              password_toggle_button=True).classes('w-full max-w-md')
             with ui.dialog() as save_dialog, ui.card().classes('w-full max-w-md'):
                 render_save_password(service)
-            ui.button('+', on_click=lambda: save_dialog.open()).classes('text-xl font-bold ml-auto')
-        
+            ui.button('+', on_click=lambda: save_dialog.open()
+                      ).classes('text-xl font-bold ml-auto')
+
         table_container = ui.column().classes('w-full hidden')
-        
+
         columns = [
-            {'name': 'id', 'label': 'ID', 'field': 'id', 'sortable': True, 'classes': 'hidden', 'headerClasses': 'hidden'}, 
-            {'name': 'username', 'label': 'Username', 'field': 'username', 'sortable': True},
-            {'name': 'platform', 'label': 'Platform', 'field': 'platform', 'sortable': True},
-            {'name': 'password', 'label': 'Password', 'field': 'password'},
-            {'name': 'date', 'label': 'Date', 'field': 'date', 'sortable': True},
-            {'name': 'actions', 'label': '', 'field': 'actions'},
+            {'name': 'id', 'label': 'ID', 'field': 'id', 'sortable': True,
+                'classes': 'hidden', 'headerClasses': 'hidden'},
+            {'name': 'username', 'label': 'Username', 'field': 'username',
+                'sortable': True, 'align': 'left', 'style': 'width: 180px'},
+            {'name': 'platform', 'label': 'Platform', 'field': 'platform',
+                'sortable': True, 'align': 'left', 'style': 'width: 180px'},
+            {'name': 'password', 'label': 'Password', 'field': 'password',
+                'align': 'left', 'style': 'width: 400px'},
+            {'name': 'date', 'label': 'Date', 'field': 'date',
+                'sortable': True, 'align': 'left', 'style': 'width: 130px'},
+            {'name': 'actions', 'label': '',
+                'field': 'actions', 'style': 'width: 100px'},
         ]
-        
+
         with table_container:
-            table = ui.table(columns=columns, rows=[], row_key='id').classes('w-full')
+            table = ui.table(columns=columns, rows=[], row_key='id').classes(
+                'w-full').props('separator=cell')
 
             with ui.dialog() as confirm_dialog, ui.card():
-                confirm_label = ui.label('').classes('text-lg font-semibold mb-4')
-                master_confirm = ui.input('Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
+                confirm_label = ui.label('').classes(
+                    'text-lg font-semibold mb-4')
+                master_confirm = ui.input(
+                    'Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
                 error_label = ui.label('').classes('text-red-500 hidden')
-                
+
                 pending_row = {'id': None}
-                
+
                 def on_cancel():
                     confirm_dialog.close()
                     master_confirm.value = ''
@@ -69,7 +81,8 @@ def render_view_passwords(service):
                     success = service.delete(pending_row['id'])
                     if success:
                         ui.notify('Password deleted!', type='positive')
-                        table.rows[:] = [r for r in table.rows if r['id'] != pending_row['id']]
+                        table.rows[:] = [
+                            r for r in table.rows if r['id'] != pending_row['id']]
                         table.update()
                     confirm_dialog.close()
                     master_confirm.value = ''
@@ -77,7 +90,8 @@ def render_view_passwords(service):
 
                 with ui.row():
                     ui.button('Cancel', on_click=on_cancel)
-                    ui.button('Delete', color='red', on_click=on_confirm_delete)
+                    ui.button('Delete', color='red',
+                              on_click=on_confirm_delete)
 
             def on_delete(e):
                 pending_row['id'] = e.args['id']
@@ -87,23 +101,24 @@ def render_view_passwords(service):
                 confirm_dialog.open()
 
             # ✅ PASSWORD SCROLL
-            table.add_slot('body-cell-password', '''
-                <q-td :props="props" class="password-cell">
-                    <div class="password-scroll">
-                        {{ props.row.password }}
-                    </div>
-                </q-td>
-            ''')
-
-            # ✅ PINNED ACTIONS
             table.add_slot('body-cell-actions', '''
-                <q-td :props="props" class="actions-cell">
-                    <q-btn flat round icon="edit" color="primary"
-                        @click="$parent.$emit('edit', props.row)" />
-                    <q-btn flat round icon="delete" color="red"
-                        @click="$parent.$emit('delete', props.row)" />
-                </q-td>
-            ''')
+    <q-td :props="props" class="actions-cell">
+        <q-btn flat round
+            :icon="props.row.password !== '********' ? 'visibility_off' : 'visibility'"
+            color="grey"
+            @click="$parent.$emit('reveal', props.row)" />
+        <q-btn flat round icon="edit" color="primary"
+            @click="$parent.$emit('edit', props.row)" />
+        <q-btn flat round icon="delete" color="red"
+            @click="$parent.$emit('delete', props.row)" />
+    </q-td>
+''')
+            
+            table.add_slot('body-cell-password', '''
+            <q-td :props="props">
+                <span class="password-scroll">{{ props.row.password }}</span>
+            </q-td>
+        ''')
 
             table.on('delete', on_delete)
 
@@ -111,8 +126,10 @@ def render_view_passwords(service):
                 edit_label = ui.label('').classes('text-lg font-semibold mb-4')
                 edit_username = ui.input('Username').classes('w-full mb-2')
                 edit_platform = ui.input('Platform').classes('w-full mb-2')
-                edit_password = ui.input('Password', password=True, password_toggle_button=True).classes('w-full mb-2')
-                edit_master = ui.input('Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
+                edit_password = ui.input(
+                    'Password', password=True, password_toggle_button=True).classes('w-full mb-2')
+                edit_master = ui.input(
+                    'Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
                 edit_error = ui.label('').classes('text-red-500 hidden')
 
                 pending_edit = {'id': None}
@@ -152,7 +169,54 @@ def render_view_passwords(service):
 
                 with ui.row():
                     ui.button('Cancel', on_click=on_edit_cancel)
-                    ui.button('Save', color='primary', on_click=on_confirm_edit)
+                    ui.button('Save', color='primary',
+                              on_click=on_confirm_edit)
+
+            with ui.dialog() as reveal_dialog, ui.card():
+                reveal_label = ui.label('').classes(
+                    'text-lg font-semibold mb-4')
+                reveal_master = ui.input(
+                    'Master Password', password=True, password_toggle_button=True).classes('w-full mb-4')
+                reveal_error = ui.label('').classes('text-red-500 hidden')
+
+                pending_reveal = {'id': None}
+
+                def on_reveal_confirm():
+                    pwd = service.get_password(
+                        pending_reveal['id'], reveal_master.value)
+                    if pwd is None:
+                        reveal_error.text = 'Wrong master password!'
+                        reveal_error.classes(remove='hidden')
+                        return
+                    for row in table.rows:
+                        if row['id'] == pending_reveal['id']:
+                            row['password'] = pwd
+                    table.update()
+                    on_reveal_close()
+
+                def on_reveal_close():
+                    reveal_dialog.close()
+                    reveal_master.value = ''
+                    reveal_error.classes(add='hidden')
+
+                with ui.row():
+                    ui.button('Close', on_click=on_reveal_close)
+                    ui.button('Show Password', on_click=on_reveal_confirm)
+
+            def on_reveal(e):
+                for row in table.rows:
+                    if row['id'] == e.args['id']:
+                        if row['password'] != '********':
+                            row['password'] = '********'
+                            table.update()
+                            return
+                pending_reveal['id'] = e.args['id']
+                reveal_label.text = f"Reveal password for '{e.args['username']}' on '{e.args['platform']}'"
+                reveal_master.value = ''
+                reveal_error.classes(add='hidden')
+                reveal_dialog.open()
+
+            table.on('reveal', on_reveal)
 
             def on_edit(e):
                 pending_edit['id'] = e.args['id']
@@ -165,15 +229,16 @@ def render_view_passwords(service):
                 edit_dialog.open()
 
             table.on('edit', on_edit)
-        
+
         def on_view():
             m = master.value
-            
+
             if not m:
-                ui.notify('Master password required to view passwords!', type='warning')
+                ui.notify(
+                    'Master password required to view passwords!', type='warning')
                 table_container.classes(add='hidden')
                 return
-            
+
             if not service.check_master(m):
                 ui.notify('Wrong master password!', type='negative')
                 master.value = ''
@@ -181,9 +246,9 @@ def render_view_passwords(service):
                 return
 
             ui.notify('Master password correct!', type='positive')
-            
-            passwords = service.get_all(m, True)
-            
+
+            passwords = service.get_all(m, False)
+
             rows = []
             for pwd in passwords:
                 rows.append({
@@ -191,14 +256,14 @@ def render_view_passwords(service):
                     'username': pwd[1],
                     'platform': pwd[2],
                     'password': pwd[3],
-                    'date': pwd[4]
+                    'date': pwd[4].strftime('%d %b %Y  %H:%M') if pwd[4] else ''
                 })
-            
+
             table.rows[:] = rows
             table.update()
             table_container.classes(remove='hidden')
-            
+
             master.value = ''
-            
+
         master.on('keydown.enter', lambda: on_view())
         ui.button('Load Passwords', on_click=on_view).classes('mt-2')

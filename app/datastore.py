@@ -108,6 +108,15 @@ def get_all_passwords(meta_id: int, master_password: str, show_real_passwords=Fa
             results.append((row.id, row.username, row.platform, password, row.created_at))
         return results
     
+def get_password_by_id(password_id: int, meta_id: int, master_password: str) -> str | None:
+    with Session(_get_engine()) as session:
+        entry = session.query(Password).filter_by(id=password_id, meta_id=meta_id).first()
+        if entry is None:
+            return None
+        try:
+            return pe.decrypt_password(entry.password, master_password)
+        except Exception:
+            return None
 
 def delete_password(meta_id: int, password_id: int) -> bool:
     with Session(_get_engine()) as session:
