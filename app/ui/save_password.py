@@ -11,7 +11,7 @@ def render_save_password(service):
             password = ui.input('Password', password=True, password_toggle_button=True).classes('w-full')
         with ui.dialog() as generate_dialog, ui.card():
             ui.label('Generate Password').classes('text-lg font-bold mb-2')
-            length_input = ui.number('Length', value=16, format='%.0f').classes('w-full mb-2')
+            length_input = ui.number('Length', value=16, min=1, format='%.0f').classes('w-full mb-2')
             
             with ui.expansion('Advanced options').classes('w-full mb-2'):
                 upper_cb = ui.checkbox('Uppercase (A-Z)', value=True)

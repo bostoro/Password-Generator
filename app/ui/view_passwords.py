@@ -1,7 +1,7 @@
 from nicegui import ui
 from .save_password import render_save_password
 
-# ✅ FIX: aggiunto shared=True
+
 ui.add_head_html('''
 <style>
 .password-cell {
@@ -9,7 +9,7 @@ ui.add_head_html('''
 }
 
 .password-scroll {
-    max-width: 280px;
+    width: 100%;
     overflow-x: auto;
     white-space: nowrap;
     display: block;
@@ -30,13 +30,15 @@ def render_view_passwords(service):
         ui.label('View Passwords').classes(
             'text-2xl font-bold mb-4 text-primary')
 
+        with ui.dialog() as save_dialog, ui.card().classes('w-full max-w-md'):
+            render_save_password(service)
+
         with ui.row().classes('w-full items-center gap-2 mb-4'):
             master = ui.input('Master Password', password=True,
-                              password_toggle_button=True).classes('w-full max-w-md')
-            with ui.dialog() as save_dialog, ui.card().classes('w-full max-w-md'):
-                render_save_password(service)
+                            password_toggle_button=True).classes('w-full max-w-md')
+            ui.button('Load Passwords', on_click=lambda: on_view()).classes('mt-2')
             ui.button('+', on_click=lambda: save_dialog.open()
-                      ).classes('text-xl font-bold ml-auto')
+                    ).classes('text-xl font-bold ml-auto')
 
         table_container = ui.column().classes('w-full hidden')
 
@@ -44,15 +46,15 @@ def render_view_passwords(service):
             {'name': 'id', 'label': 'ID', 'field': 'id', 'sortable': True,
                 'classes': 'hidden', 'headerClasses': 'hidden'},
             {'name': 'username', 'label': 'Username', 'field': 'username',
-                'sortable': True, 'align': 'left', 'style': 'width: 180px'},
+                'sortable': True, 'align': 'left', 'style': 'width: 15%'},
             {'name': 'platform', 'label': 'Platform', 'field': 'platform',
-                'sortable': True, 'align': 'left', 'style': 'width: 180px'},
+                'sortable': True, 'align': 'left', 'style': 'width: 15%'},
             {'name': 'password', 'label': 'Password', 'field': 'password',
-                'align': 'left', 'style': 'width: 400px'},
+                'align': 'left', 'style': 'width: 40%; max-width: 0; overflow: hidden'},
             {'name': 'date', 'label': 'Date', 'field': 'date',
-                'sortable': True, 'align': 'left', 'style': 'width: 130px'},
+                'sortable': True, 'align': 'left', 'style': 'width: 8%'},
             {'name': 'actions', 'label': '',
-                'field': 'actions', 'style': 'width: 100px'},
+                'field': 'actions', 'style': 'width: 8%'},
         ]
 
         with table_container:
@@ -115,10 +117,14 @@ def render_view_passwords(service):
 ''')
             
             table.add_slot('body-cell-password', '''
-            <q-td :props="props">
-                <span class="password-scroll">{{ props.row.password }}</span>
-            </q-td>
-        ''')
+    <q-td :props="props">
+        <div style="display: flex; align-items: center; width: 100%;">
+            <span class="password-scroll" style="flex: 1; min-width: 0;">{{ props.row.password }}</span>
+            <q-btn v-if="props.row.password !== '********'" flat round dense icon="content_copy" color="grey" size="sm"
+                @click="$parent.$emit('copy', props.row)" />
+        </div>
+    </q-td>
+''')
 
             table.on('delete', on_delete)
 
@@ -194,6 +200,8 @@ def render_view_passwords(service):
                     table.update()
                     on_reveal_close()
 
+                reveal_master.on('keydown.enter', on_reveal_confirm)
+
                 def on_reveal_close():
                     reveal_dialog.close()
                     reveal_master.value = ''
@@ -215,8 +223,15 @@ def render_view_passwords(service):
                 reveal_master.value = ''
                 reveal_error.classes(add='hidden')
                 reveal_dialog.open()
+                reveal_master.run_method('focus')
 
             table.on('reveal', on_reveal)
+
+            async def on_copy(e):
+                await ui.clipboard.write(e.args['password'])
+                ui.notify('Copied!', type='positive')
+
+            table.on('copy', on_copy)
 
             def on_edit(e):
                 pending_edit['id'] = e.args['id']
@@ -266,4 +281,3 @@ def render_view_passwords(service):
             master.value = ''
 
         master.on('keydown.enter', lambda: on_view())
-        ui.button('Load Passwords', on_click=on_view).classes('mt-2')
