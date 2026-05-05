@@ -24,7 +24,7 @@ def setup_master_password_ui(on_success):
                 return
             if datastore.check_master_password(u, pwd):
                 meta = datastore.get_meta(u)
-                on_success(meta)
+                on_success(meta, pwd)
             else:
                 ui.notify('Wrong master password!', type='negative')
         
@@ -39,7 +39,7 @@ def setup_master_password_ui(on_success):
                 return
             if datastore.set_master_password(u, pwd):
                 meta = datastore.get_meta(u)
-                on_success(meta)
+                on_success(meta, pwd)
             else:
                 ui.notify('Error creating user', type='negative')
 
@@ -83,9 +83,9 @@ def render_layout():
         build_main_ui(_current_service)
         return
         
-    def on_setup_success(meta):
+    def on_setup_success(meta, pwd):
         global _current_service
-        _current_service = PasswordService(meta.username, meta.id)
+        _current_service = PasswordService(meta.username, meta.id, pwd)
         ui.navigate.to('/')
 
     setup_master_password_ui(on_setup_success)
