@@ -182,7 +182,11 @@ pip install -r requirements.txt
 
 ### 2. Configuration
 Create a `.env` file in the root:
+```
 DB_FILE_NAME=vault.db
+SALT="password_generator_salt_2024"
+STYLES_PATH="styles.json"
+```
 
 ### 3. Launch
 ```bash
